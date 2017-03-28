@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.TilePane?>
+
+
+<Pane fx:id="root" fx:controller="aqualight.phcontroller.gui.PhControlController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/aqualightlogo-final.png" />
+         </image>
+      </ImageView>
+      <LineChart fx:id="linechart" layoutX="114.0" layoutY="78.0" prefHeight="282.0" prefWidth="449.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <Label layoutX="574.0" layoutY="78.0" text="Temperatur:" />
+      <Label layoutX="604.0" layoutY="271.0" text="pH:" />
+      <Label layoutX="587.0" layoutY="161.0" text="Leitwert:" />
+      <Label fx:id="temperature1" layoutX="711.0" layoutY="78.0" text="0" />
+      <Label layoutX="729.0" layoutY="240.0" text="C°" />
+      <Label fx:id="pH2" layoutX="711.0" layoutY="271.0" text="7" />
+      <Label layoutX="724.0" layoutY="161.0" text=" mS" />
+      <Label fx:id="conductivity" layoutX="711.0" layoutY="161.0" text="0" />
+      <Label layoutX="575.0" layoutY="240.0" text="Temperatur:" />
+      <Label layoutX="604.0" layoutY="111.0" text="pH:" />
+      <Label fx:id="temperature2" layoutX="711.0" layoutY="240.0" text="0" />
+      <Label layoutX="729.0" layoutY="78.0" text="C°" />
+      <Label fx:id="pH1" layoutX="711.0" layoutY="111.0" text="7" />
+      <Separator prefWidth="200.0" />
+      <Separator layoutX="574.0" layoutY="143.0" prefWidth="200.0" />
+      <Separator layoutX="574.0" layoutY="200.0" prefWidth="200.0" />
+      <Label layoutX="557.0" layoutY="50.0" text="Probe 1:" />
+      <Label layoutX="558.0" layoutY="209.0" text="Probe 2:" />
+      <TilePane fx:id="tilePane" layoutY="367.0" prefHeight="115.0" prefWidth="800.0">
+         <children>
+            
+         </children>
+      </TilePane>
+   </children>
+</Pane>
