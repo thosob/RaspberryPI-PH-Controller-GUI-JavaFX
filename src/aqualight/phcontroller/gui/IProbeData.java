@@ -14,6 +14,8 @@ import java.sql.Date;
  */
 public interface IProbeData {
     
+   
+    
     /**
      * @brief Get the value of timeStamp    
      * @return the value of timeStamp

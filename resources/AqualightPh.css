@@ -25,4 +25,7 @@ and open the template in the editor.
     -fx-background-color: violet;
 }
 
+label{
+    font-weight: bolder;
+}
 

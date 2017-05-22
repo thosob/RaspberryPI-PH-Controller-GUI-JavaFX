@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
@@ -11,44 +16,54 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.TilePane?>
 
-
-<Pane fx:id="root" fx:controller="aqualight.phcontroller.gui.PhControlController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aqualight.phcontroller.gui.PhControlController">
    <children>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="/aqualightlogo-final.png" />
          </image>
       </ImageView>
-      <LineChart fx:id="linechart" layoutX="114.0" layoutY="78.0" prefHeight="282.0" prefWidth="449.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <Label layoutX="574.0" layoutY="78.0" text="Temperatur:" />
-      <Label layoutX="604.0" layoutY="271.0" text="pH:" />
-      <Label layoutX="587.0" layoutY="161.0" text="Leitwert:" />
-      <Label fx:id="temperature1" layoutX="711.0" layoutY="78.0" text="0" />
-      <Label layoutX="729.0" layoutY="240.0" text="C°" />
-      <Label fx:id="pH2" layoutX="711.0" layoutY="271.0" text="7" />
-      <Label layoutX="724.0" layoutY="161.0" text=" mS" />
-      <Label fx:id="conductivity" layoutX="711.0" layoutY="161.0" text="0" />
-      <Label layoutX="575.0" layoutY="240.0" text="Temperatur:" />
-      <Label layoutX="604.0" layoutY="111.0" text="pH:" />
-      <Label fx:id="temperature2" layoutX="711.0" layoutY="240.0" text="0" />
-      <Label layoutX="729.0" layoutY="78.0" text="C°" />
-      <Label fx:id="pH1" layoutX="711.0" layoutY="111.0" text="7" />
-      <Separator prefWidth="200.0" />
-      <Separator layoutX="574.0" layoutY="143.0" prefWidth="200.0" />
-      <Separator layoutX="574.0" layoutY="200.0" prefWidth="200.0" />
-      <Label layoutX="557.0" layoutY="50.0" text="Probe 1:" />
-      <Label layoutX="558.0" layoutY="209.0" text="Probe 2:" />
-      <TilePane fx:id="tilePane" layoutY="367.0" prefHeight="115.0" prefWidth="800.0">
+      <Pane layoutX="289.0" layoutY="25.0" prefHeight="128.0" prefWidth="485.0">
          <children>
-            
-         </children>
+            <Label fx:id="p1" layoutX="14.0" layoutY="28.0" styleClass="probeLabelText" text="Probe1:" />
+            <Label fx:id="p2" layoutX="14.0" layoutY="45.0" styleClass="probeLabelText" text="Probe2:" />
+            <Label fx:id="p3" layoutX="14.0" layoutY="62.0" styleClass="probeLabelText" text="Probe3:" />
+            <Label fx:id="p4" layoutX="14.0" layoutY="79.0" styleClass="probeLabelText" text="Probe4:" />
+            <Label fx:id="temp1" layoutX="13.0" layoutY="100.0" styleClass="probeLabelText" text="Temperature-1:" />
+            <Label fx:id="p5" layoutX="261.0" layoutY="28.0" styleClass="probeLabelText" text="Probe5:" />
+            <Label fx:id="p6" layoutX="261.0" layoutY="45.0" styleClass="probeLabelText" text="Probe6:" />
+            <Label fx:id="p7" layoutX="261.0" layoutY="62.0" styleClass="probeLabelText" text="Probe7:" />
+            <Label fx:id="p8" layoutX="261.0" layoutY="79.0" styleClass="probeLabelText" text="Probe8:" />
+            <Label fx:id="temp2" layoutX="261.0" layoutY="100.0" styleClass="probeLabelText" text="Temperature-2:" />
+            <Label id="p1" layoutX="136.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p2" layoutX="136.0" layoutY="45.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p3" layoutX="136.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p4" layoutX="136.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
+            <Label id="t2" layoutX="397.0" layoutY="100.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p8" layoutX="397.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p7" layoutX="397.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p6" layoutX="397.0" layoutY="47.0" styleClass="probeValueText" text="7.0" />
+            <Label id="p5" layoutX="397.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
+            <Label id="t1" layoutX="136.0" layoutY="100.0" styleClass="probeValueText" text="7.0" />
+            <Separator layoutX="-5.0" layoutY="99.0" prefWidth="200.0" />
+            <Separator layoutX="249.0" layoutY="99.0" prefWidth="200.0" />                             
+         </children>         
+      </Pane>
+      <Pane layoutX="136.0" layoutY="164.0" prefHeight="200" prefWidth="446.0">
+          <children>
+              <LineChart fx:id="linechart" layoutX="-76.0" prefHeight="237.0" prefWidth="598.0">
+              <xAxis>
+                <NumberAxis prefHeight="47.0" prefWidth="353.0" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis prefHeight="316.0" prefWidth="66.0" side="LEFT" />
+              </yAxis>
+            </LineChart>
+          </children>
+      </Pane>
+        
+      <TilePane fx:id="tilePane" layoutY="367.0" prefHeight="115.0" prefWidth="800.0">
+         
       </TilePane>
    </children>
 </Pane>

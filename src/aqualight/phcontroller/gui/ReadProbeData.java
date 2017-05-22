@@ -4,15 +4,13 @@
  * and open the template in the editor.
  */
 package aqualight.phcontroller.gui;
-
-import java.sql.Connection;
 import java.sql.Date;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -35,23 +33,38 @@ public class ReadProbeData implements Runnable{
             //Should be limited to a weeks data, so the raspberry pi is not killed
             PreparedStatement statement = Connection.prepareStatement("SELECT address, time, ph, temperature, conductivity FROM queue");
             ResultSet Result = statement.executeQuery();
-            
-            
+            String Date = null;
+            //Go through all data and add it to the list
             while(Result.next()){
-                Address = Result.getString(0);
-                //If we cannot find the address as a value
-                if(!DataHandler.DataHandlerList.containsKey(Address)){    
-                                        
+                 Address = Result.getString(1);
+                
+                //If we cannot find the address as a value, the probe was not registered, yet.
+                if(!DataHandler.DataHandlerList.containsKey(Address)){                                            
                     //we have to initialize a new list, always using Address as ID
+                    //to register the probe
                     DataHandler.DataHandlerList.put(Address, new DataHandler(Address,new LinkedList<>(),getProbeType(Result)));                                        
+                }            
+                
+                //If data comes from ph probe
+                if(DataHandler.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1){
+                    
+                    Date date = Result.getDate(2);
+                    double ph = Result.getDouble(3);
+                    double temperature = Result.getDouble(4);
+                                                        
+                    //then we write the Data to a list
+                    DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(date, temperature,ph));
                 }
-                if(DataHandler.DataHandlerList.get(Address).Values.getFirst().getProbeType() == "ph")
-                //Then we need to save data as PH
-                DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(Date.valueOf(Result.getString(1)),Double.valueOf(Result.getString(2)), Double.valueOf(Result.getString(3))));
-                //or as Conductivity, which is not yet defined
-                //DataHandler.DataHandlerList.get(Address).Values.add(new ConProbeData(Date.valueOf(Result.getString(1)),Double.valueOf(Result.getString(2)), Double.valueOf(Result.getString(3))));            
+                else{
+                    //Data comes from EC-Probe
+                    Date date = Result.getDate(2);
+                    double ec = Result.getDouble(3);
+                    double temperature = Result.getDouble(4);
+                    //This should be for ECProbe
+                    DataHandler.DataHandlerList.get(Address).Values.add(new ECProbeData(date, temperature,ec));
+                }
             }    
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
             try {
