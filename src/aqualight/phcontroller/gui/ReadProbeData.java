@@ -48,12 +48,13 @@ public class ReadProbeData implements Runnable{
                 //If data comes from ph probe
                 if(DataHandler.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1){
                     
-                    Date date = Result.getDate(2);
+                    long date = Result.getLong(2);
+                    Date realDate = new Date(date);
                     double ph = Result.getDouble(3);
-                    double temperature = Result.getDouble(4);
-                                                        
+                    double temperature = Result.getDouble(4);                                       
+                  
                     //then we write the Data to a list
-                    DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(date, temperature,ph));
+                    DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(realDate, temperature,ph));
                 }
                 else{
                     //Data comes from EC-Probe
