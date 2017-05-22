@@ -4,67 +4,73 @@
  * and open the template in the editor.
  */
 package aqualight.phcontroller.gui;
+
+import static aqualight.phcontroller.gui.AqualightPhControllerGui.GetLabel;
+import static aqualight.phcontroller.gui.AqualightPhControllerGui.SetUpLabel;
 import java.sql.Date;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
-
+import java.util.Map;
+import javafx.scene.control.Label;
 
 /**
- * @brief Reads runnable data 
+ * @brief Reads runnable data
  * @author Thomas Sobieroy
  */
-public class ReadProbeData implements Runnable{
+public class ReadProbeData implements Runnable {
 
+    //Assembles all data in model 
     @Override
     public void run() {
         Connection Connection = null;
         String Address = "";
-        
+
         try {
             // db parameters
             String Url = "jdbc:sqlite:resources/symbiofilter.db";
             // create a connection to the database
-            Connection = DriverManager.getConnection(Url);       
-            
+            Connection = DriverManager.getConnection(Url);
+
             //Should be limited to a weeks data, so the raspberry pi is not killed
             PreparedStatement statement = Connection.prepareStatement("SELECT address, time, ph, temperature, conductivity FROM queue");
             ResultSet Result = statement.executeQuery();
             String Date = null;
             //Go through all data and add it to the list
-            while(Result.next()){
-                 Address = Result.getString(1);
-                
+            while (Result.next()) {
+                Address = Result.getString(1);
+
                 //If we cannot find the address as a value, the probe was not registered, yet.
-                if(!DataHandler.DataHandlerList.containsKey(Address)){                                            
+                if (!DataHandler.DataHandlerList.containsKey(Address)) {
                     //we have to initialize a new list, always using Address as ID
                     //to register the probe
-                    DataHandler.DataHandlerList.put(Address, new DataHandler(Address,new LinkedList<>(),getProbeType(Result)));                                        
-                }            
-                
+                    DataHandler.DataHandlerList.put(Address, new DataHandler(Address, new LinkedList<>(), getProbeType(Result)));
+                }
+
                 //If data comes from ph probe
-                if(DataHandler.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1){
-                    
+                if (DataHandler.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1) {
+
                     long date = Result.getLong(2);
                     Date realDate = new Date(date);
                     double ph = Result.getDouble(3);
-                    double temperature = Result.getDouble(4);                                       
-                  
+                    double temperature = Result.getDouble(4);
+
                     //then we write the Data to a list
-                    DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(realDate, temperature,ph));
-                }
-                else{
+                    DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(realDate, temperature, ph));
+                } else {
                     //Data comes from EC-Probe
-                    Date date = Result.getDate(2);
+                    long date = Result.getLong(2);
+                    Date realDate = new Date(date);
                     double ec = Result.getDouble(3);
                     double temperature = Result.getDouble(4);
                     //This should be for ECProbe
-                    DataHandler.DataHandlerList.get(Address).Values.add(new ECProbeData(date, temperature,ec));
+                    DataHandler.DataHandlerList.get(Address).Values.add(new ECProbeData(realDate, temperature, ec));
                 }
-            }    
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -76,14 +82,44 @@ public class ReadProbeData implements Runnable{
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
-        }               
+        }
+
+        //Get all addresses and display data of all addresses to the frontend
+        Iterator it = DataHandler.DataHandlerList.entrySet().iterator();
+        //iterate over all datahandlers
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+
+            //Get address and list
+            String address = (String) pair.getKey();
+            LinkedList<IProbeData> list = ((DataHandler) pair.getValue()).Values;
+
+            //get probevalue and display that to the screen
+            double value = list.getLast().getProbeValue();
+
+            Label label = GetLabel(address);
+            if(label == null){
+                SetUpLabel(address);
+                label = GetLabel(address);
+                label.setText(String.valueOf(value));
+            }
+            else{
+                label.setText(String.valueOf(value));
+            }
+            
+
+            //for concurrency ~ protection
+            it.remove();
+        }
+
     }
+
     /**
      * @brief determines by a result set the type of probe
-     * @param Result ResultSet with data 
+     * @param Result ResultSet with data
      * @return e.g. "ph", "conductivity" or sth. else
      */
-    public static String getProbeType(ResultSet Result){
+    public static String getProbeType(ResultSet Result) {
         //Distinction is missing here
         return "ph";
     }

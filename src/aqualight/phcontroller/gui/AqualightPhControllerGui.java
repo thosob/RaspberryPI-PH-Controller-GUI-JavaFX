@@ -5,14 +5,22 @@
  */
 package aqualight.phcontroller.gui;
 
-
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
@@ -21,18 +29,97 @@ import javafx.stage.Stage;
  */
 public class AqualightPhControllerGui extends Application {
 
+    /**
+     * @brief stores all probe labels with id
+     */
+    private static HashMap<String, Label> map = new HashMap<String, Label>();
+    /**
+     * @brief map for temperature labels with id
+     */
+    private static HashMap<String, Label> tempMap = new HashMap<String, Label>();
+    /**
+     * @brief probe labels
+     */
+    private static Label[] labels;
+    /**
+     * @brief temperature labels
+     */
+    private static Label[] tempLabels;
+
+    /**
+     * @brief writes mapping to disk
+     * @string which data to save (probe, temp, whatever)
+     * @return true if successfully executed
+     */
+    private static boolean WriteMapToDisk(String data, HashMap object) {
+
+        try {
+            //Try with ressource writer, object outputstream
+            try (FileOutputStream Writer = new FileOutputStream(data); ObjectOutputStream obj = new ObjectOutputStream(Writer)) {
+                obj.writeObject(object);
+                obj.flush();
+            }
+            return true;
+        } catch (IOException e) {
+            //if something goes terrible wrong
+            System.err.println(e);
+            return false;
+        }
+    }
+
+    /**
+     * @brief reads map from disk
+     * @param data filename of the map
+     * @param object global variable that is to be replaced with the loaded data
+     * @return
+     */
+    private static HashMap LoadMapFromDisk(String data, HashMap object) {
+        try {
+            try (FileInputStream fin = new FileInputStream(data); ObjectInputStream ois = new ObjectInputStream(fin)) {
+                object = (HashMap) ois.readObject();
+            }
+            return object;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
-        
-        
-        Scene scene = new Scene(root);        
+        Scene scene = new Scene(root);
+        int i;
         scene.getStylesheets().add("AqualightPh.css");
-               
-        
-        
         stage.setScene(scene);
         stage.show();
+
+        //Lookup all notes by css class 
+        Set<Node> labelSet = scene.getRoot().lookupAll(".probeLabelText");
+        //initialize array size
+        labels = new Label[labelSet.size()];
+        //iterate over all labels in set
+        i = 0;
+        for (Node n : labelSet) {
+            labels[i] = (Label) n;
+            i++;
+        }
+
+        //Lookup all temp notes by css class 
+        Set<Node> tempLabelSet = scene.getRoot().lookupAll(".tempLabelText");
+        //initialize array size
+        tempLabels = new Label[tempLabelSet.size()];
+        //iterate over all labels in set
+        i = 0;
+        for (Node n : tempLabelSet) {
+            tempLabels[i] = (Label) n;
+            i++;
+        }
+
+        //Initialize Hashmaps
+        LoadMapFromDisk("map", map);
+        LoadMapFromDisk("tempMap", tempMap);
+
     }
 
     /**
@@ -43,16 +130,97 @@ public class AqualightPhControllerGui extends Application {
         final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         //Startup with new data handler map, to access
         DataHandler.DataHandlerList = new HashMap<>();
-        
+
         //Start runnable thread, such that database will be read every minute and
         //new data is stored in static model
         //executor.scheduleAtFixedRate(new ReadProbeData() , 0, 1, TimeUnit.MINUTES);
         ReadProbeData data = new ReadProbeData();
-        data.run();        
-        
+        data.run();
+
         launch(args);
-        
-        
+
     }
-    
+
+    /**
+     * @brief Sets up label for probe
+     * @param address of the probe
+     * @param label that is used
+     */
+    public static void SetUpLabel(String address, Label label) {
+        //Update key value of the map
+        if (address != null & label != null) {
+            map.put(address, label);
+            //saves data in disk
+            WriteMapToDisk("map", map);
+        }
+    }
+    /**
+     * @brief sets up label for probe 
+     * @param address of the probe
+     */
+    public static void SetUpLabel(String address){
+        //check for address else do nothing more
+        if(!map.containsKey(address)){            
+            //go over all labels
+            for(Label l : labels){
+                //check if label is already used
+                if(!map.containsValue(l)){
+                    //if not set up our mapping
+                    map.put(address, l);
+                    //everything is fine we've set up the label
+                    return;
+                }
+            }
+        }
+        WriteMapToDisk("map",map);                
+    }
+
+    /**
+     * @brief Sets up label for probe
+     * @param address of the probe
+     * @param label that is used
+     */
+    public static void SetUpTemperatureLabel(String address, Label label) {
+        //Update key value of the map
+        if (address != null & label != null) {
+            tempMap.put(address, label);
+            //saves data in disk
+            WriteMapToDisk("tempMap", tempMap);
+        }
+    }
+
+    /**
+     * @brief gets the label
+     * @param address address is needed as key
+     * @return javafx-label
+     */
+    public static Label GetLabel(String address) {
+        return map.get(address);
+    }
+
+    /**
+     * @brief gets the temperature label
+     * @param id is needed as key
+     * @return javafx-label
+     */
+    public static Label GetTempLabel(String id) {
+        return tempMap.get(id);
+    }
+
+    /**
+     * @brief gets all probe labels
+     * @return ProbeLabel Array
+     */
+    public static Label[] GetAllProbeLabels() {
+        return labels;
+    }
+
+    /**
+     * @brief returns temperature labels
+     * @return temperature labels
+     */
+    public static Label[] GetAllTemperatureLabels() {
+        return tempLabels;
+    }
+
 }
