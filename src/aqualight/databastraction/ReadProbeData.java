@@ -5,8 +5,8 @@
  */
 package aqualight.databastraction;
 
-import aqualight.probes.PhProbeData;
-import aqualight.probes.ECProbeData;
+import aqualight.dataprocessing.PhProbeData;
+import aqualight.dataprocessing.ECProbeData;
 import static aqualight.visualisation.AqualightPhControllerGui.GetLabel;
 import static aqualight.visualisation.AqualightPhControllerGui.SetUpLabel;
 import java.sql.Date;
@@ -39,7 +39,7 @@ public class ReadProbeData implements Runnable {
             Connection = DriverManager.getConnection(Url);
 
             //Should be limited to a weeks data, so the raspberry pi is not killed
-            PreparedStatement statement = Connection.prepareStatement("SELECT address, time, ph, temperature, conductivity FROM queue");
+            PreparedStatement statement = Connection.prepareStatement("SELECT address, time, value FROM queue");
             ResultSet Result = statement.executeQuery();
             String Date = null;
             //Go through all data and add it to the list

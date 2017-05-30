@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aqualight.probes;
+package aqualight.dataprocessing;
 
 import java.sql.Date;
 
@@ -47,4 +47,11 @@ public interface IProbeData {
      */
     public String getProbeType();
     
+    /**
+     * @brief Force overriding of the equals method
+     * @param obj that is to be compared to the class
+     * @return true if object is equal or else false meaning not equal
+     */
+    @Override
+    public boolean equals(Object obj);
 }

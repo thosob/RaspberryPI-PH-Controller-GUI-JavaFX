@@ -5,7 +5,7 @@
  */
 package aqualight.databastraction;
 
-import aqualight.probes.IProbeData;
+import aqualight.dataprocessing.IProbeData;
 import java.util.HashMap;
 import java.util.LinkedList;
 

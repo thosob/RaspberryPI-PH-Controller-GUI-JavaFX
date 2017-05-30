@@ -5,10 +5,78 @@
  */
 package aqualight.databastraction;
 
+import aqualight.dataprocessing.IProbeData;
+import java.util.List;
+
 /**
- *
- * @author root
+ * @brief Describes EC-Probe
+ * @author THomas Sobieroy
  */
-public class ECProbe {
+public class ECProbe implements IProbe{
+
+    private String Address;
+    private String Name;
+    private int LowCalibration;
+    private int HighCalibration;    
+
+    @Override
+    public String getAddress() {
+        return Address;
+    }
+
+    @Override
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    @Override
+    public String getName() {
+        return Name;
+    }
+
+    @Override
+    public void setName(String name) {
+        Name = name;
+    }
+
+    @Override
+    public List<IProbeData> getValues() {
+        return Data;
+    }
+
+    @Override
+    public void setValue(IProbeData data) {
+        if(!Data.contains(data)){
+            Data.add(data);
+        }
+    }
+
+    /**
+     * @return the LowCalibration
+     */
+    public int getLowCalibration() {
+        return LowCalibration;
+    }
+
+    /**
+     * @param LowCalibration the LowCalibration to set
+     */
+    public void setLowCalibration(int LowCalibration) {
+        this.LowCalibration = LowCalibration;
+    }
+
+    /**
+     * @return the HighCalibration
+     */
+    public int getHighCalibration() {
+        return HighCalibration;
+    }
+
+    /**
+     * @param HighCalibration the HighCalibration to set
+     */
+    public void setHighCalibration(int HighCalibration) {
+        this.HighCalibration = HighCalibration;
+    }
     
 }

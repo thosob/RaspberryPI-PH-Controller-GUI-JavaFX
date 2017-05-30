@@ -7,7 +7,7 @@ package aqualight.visualisation;
 
 import aqualight.databastraction.ProbeData;
 import aqualight.databastraction.ReadProbeData;
-import aqualight.probes.IProbeData;
+import aqualight.dataprocessing.IProbeData;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
