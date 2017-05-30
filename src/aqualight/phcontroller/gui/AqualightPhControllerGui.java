@@ -99,7 +99,7 @@ public class AqualightPhControllerGui extends Application {
     public void initializeGlobalGUIObjects(Scene scene){
         int i = 0;
         //Lookup all notes by css class an create a value list
-        Set<Node> labelSet = scene.getRoot().lookupAll(".valueLabels");
+        Set<Node> labelSet = scene.getRoot().lookupAll(".probeValueText");
         //initialize array size
         labels = new Label[labelSet.size()];
         //iterate over all labels in set
@@ -110,7 +110,7 @@ public class AqualightPhControllerGui extends Application {
         }
         
         //Lookup all notes by css class and create a label list
-        Set<Node> labelSetName = scene.getRoot().lookupAll(".labelsName");
+        Set<Node> labelSetName = scene.getRoot().lookupAll(".probeLabelText");
         //initialize array size
         labelsName = new Label[labelSetName.size()];
         //iterate over all labels in set
@@ -121,7 +121,7 @@ public class AqualightPhControllerGui extends Application {
         }
 
         //Lookup all temp notes by css class for value list of labels
-        Set<Node> tempLabelSet = scene.getRoot().lookupAll(".tempValueLabels");
+        Set<Node> tempLabelSet = scene.getRoot().lookupAll(".tempValueText");
         //initialize array size
         tempLabels = new Label[tempLabelSet.size()];
         //iterate over all labels in set
@@ -263,5 +263,55 @@ public class AqualightPhControllerGui extends Application {
     public static Label[] GetAllTemperatureLabels() {
         return tempLabels;
     }
+    
+       public static HashMap<String, Label> getMap() {
+        return map;
+    }
+
+    public static void setMap(HashMap<String, Label> map) {
+        AqualightPhControllerGui.map = map;
+    }
+
+    public static HashMap<String, Label> getTempMap() {
+        return tempMap;
+    }
+
+    public static void setTempMap(HashMap<String, Label> tempMap) {
+        AqualightPhControllerGui.tempMap = tempMap;
+    }
+
+    public static Label[] getLabels() {
+        return labels;
+    }
+
+    public static void setLabels(Label[] labels) {
+        AqualightPhControllerGui.labels = labels;
+    }
+
+    public static Label[] getTempLabels() {
+        return tempLabels;
+    }
+
+    public static void setTempLabels(Label[] tempLabels) {
+        AqualightPhControllerGui.tempLabels = tempLabels;
+    }
+
+    public static Label[] getLabelsName() {
+        return labelsName;
+    }
+
+    public static void setLabelsName(Label[] labelsName) {
+        AqualightPhControllerGui.labelsName = labelsName;
+    }
+
+    public static Label[] getTempLabelsName() {
+        return tempLabelsName;
+    }
+
+    public static void setTempLabelsName(Label[] tempLabelsName) {
+        AqualightPhControllerGui.tempLabelsName = tempLabelsName;
+    }
+
+    
 
 }
