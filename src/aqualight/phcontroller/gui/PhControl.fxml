@@ -25,26 +25,26 @@
       </ImageView>
       <Pane layoutX="289.0" layoutY="25.0" prefHeight="128.0" prefWidth="485.0">
          <children>
-            <Label fx:id="p1" layoutX="14.0" layoutY="28.0" styleClass="probeLabelText" text="Probe1:" />
-            <Label fx:id="p2" layoutX="14.0" layoutY="45.0" styleClass="probeLabelText" text="Probe2:" />
-            <Label fx:id="p3" layoutX="14.0" layoutY="62.0" styleClass="probeLabelText" text="Probe3:" />
-            <Label fx:id="p4" layoutX="14.0" layoutY="79.0" styleClass="probeLabelText" text="Probe4:" />
+            <Label fx:id="p1-name" layoutX="14.0" layoutY="28.0" styleClass="probeLabelText" text="Probe1:" />
+            <Label fx:id="p2-name" layoutX="14.0" layoutY="45.0" styleClass="probeLabelText" text="Probe2:" />
+            <Label fx:id="p3-name" layoutX="14.0" layoutY="62.0" styleClass="probeLabelText" text="Probe3:" />
+            <Label fx:id="p4-name" layoutX="14.0" layoutY="79.0" styleClass="probeLabelText" text="Probe4:" />
             <Label fx:id="temp1" layoutX="13.0" layoutY="100.0" styleClass="tempLabelText" text="Temperature-1:" />
-            <Label fx:id="p5" layoutX="261.0" layoutY="28.0" styleClass="probeLabelText" text="Probe5:" />
-            <Label fx:id="p6" layoutX="261.0" layoutY="45.0" styleClass="probeLabelText" text="Probe6:" />
-            <Label fx:id="p7" layoutX="261.0" layoutY="62.0" styleClass="probeLabelText" text="Probe7:" />
-            <Label fx:id="p8" layoutX="261.0" layoutY="79.0" styleClass="probeLabelText" text="Probe8:" />
+            <Label fx:id="p5-name" layoutX="261.0" layoutY="28.0" styleClass="probeLabelText" text="Probe5:" />
+            <Label fx:id="p6-name" layoutX="261.0" layoutY="45.0" styleClass="probeLabelText" text="Probe6:" />
+            <Label fx:id="p7-name" layoutX="261.0" layoutY="62.0" styleClass="probeLabelText" text="Probe7:" />
+            <Label fx:id="p8-name" layoutX="261.0" layoutY="79.0" styleClass="probeLabelText" text="Probe8:" />
             <Label fx:id="temp2" layoutX="261.0" layoutY="100.0" styleClass="tempLabelText" text="Temperature-2:" />
-            <Label id="p1" layoutX="136.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p2" layoutX="136.0" layoutY="45.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p3" layoutX="136.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p4" layoutX="136.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
-            <Label id="t2" layoutX="397.0" layoutY="100.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p8" layoutX="397.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p7" layoutX="397.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p6" layoutX="397.0" layoutY="47.0" styleClass="probeValueText" text="7.0" />
-            <Label id="p5" layoutX="397.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
-            <Label id="t1" layoutX="136.0" layoutY="100.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p1" layoutX="136.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p2" layoutX="136.0" layoutY="45.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p3" layoutX="136.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p4" layoutX="136.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="t2" layoutX="397.0" layoutY="100.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p8" layoutX="397.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p7" layoutX="397.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p6" layoutX="397.0" layoutY="47.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p5" layoutX="397.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="t1" layoutX="136.0" layoutY="100.0" styleClass="probeValueText" text="7.0" />
             <Separator layoutX="-5.0" layoutY="99.0" prefWidth="200.0" />
             <Separator layoutX="249.0" layoutY="99.0" prefWidth="200.0" />                             
          </children>         

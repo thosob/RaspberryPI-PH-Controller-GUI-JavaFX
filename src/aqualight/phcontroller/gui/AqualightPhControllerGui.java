@@ -38,13 +38,21 @@ public class AqualightPhControllerGui extends Application {
      */
     private static HashMap<String, Label> tempMap = new HashMap<String, Label>();
     /**
-     * @brief probe labels
+     * @brief probe label names
      */
     private static Label[] labels;
     /**
      * @brief temperature labels
      */
     private static Label[] tempLabels;
+    /**
+     * @brief probe values     
+     */
+    private static Label[] labelsName;
+    /**
+     * @brief temperature values
+     */
+    private static Label[] tempLabelsName;
 
     /**
      * @brief writes mapping to disk
@@ -84,18 +92,14 @@ public class AqualightPhControllerGui extends Application {
             return null;
         }
     }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
-        Scene scene = new Scene(root);
-        int i;
-        scene.getStylesheets().add("AqualightPh.css");
-        stage.setScene(scene);
-        stage.show();
-
-        //Lookup all notes by css class 
-        Set<Node> labelSet = scene.getRoot().lookupAll(".probeLabelText");
+    /**
+     * @brief initialize all global gui objects, scene has to be load fully
+     * @param scene contains fully load scene      
+     **/
+    public void initializeGlobalGUIObjects(Scene scene){
+        int i = 0;
+        //Lookup all notes by css class an create a value list
+        Set<Node> labelSet = scene.getRoot().lookupAll(".valueLabels");
         //initialize array size
         labels = new Label[labelSet.size()];
         //iterate over all labels in set
@@ -104,9 +108,20 @@ public class AqualightPhControllerGui extends Application {
             labels[i] = (Label) n;
             i++;
         }
+        
+        //Lookup all notes by css class and create a label list
+        Set<Node> labelSetName = scene.getRoot().lookupAll(".labelsName");
+        //initialize array size
+        labelsName = new Label[labelSetName.size()];
+        //iterate over all labels in set
+        i = 0;
+        for (Node n : labelSetName) {
+            labelsName[i] = (Label) n;
+            i++;
+        }
 
-        //Lookup all temp notes by css class 
-        Set<Node> tempLabelSet = scene.getRoot().lookupAll(".tempLabelText");
+        //Lookup all temp notes by css class for value list of labels
+        Set<Node> tempLabelSet = scene.getRoot().lookupAll(".tempValueLabels");
         //initialize array size
         tempLabels = new Label[tempLabelSet.size()];
         //iterate over all labels in set
@@ -115,18 +130,32 @@ public class AqualightPhControllerGui extends Application {
             tempLabels[i] = (Label) n;
             i++;
         }
+        
+        //Lookup all temp notes by css class to build temperature labels 
+        Set<Node> tempLabelNameSet = scene.getRoot().lookupAll(".tempLabelText");
+        //initialize array size
+        tempLabelsName = new Label[tempLabelNameSet.size()];
+        //iterate over all labels in set
+        i = 0;
+        for (Node n : tempLabelNameSet) {
+            tempLabelsName[i] = (Label) n;
+            i++;
+        }
 
         //Initialize Hashmaps
         LoadMapFromDisk("map", map);
         LoadMapFromDisk("tempMap", tempMap);
-
     }
+    
 
-    /**
-     * @brief Main method, which is called
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
+        Scene scene = new Scene(root);        
+        scene.getStylesheets().add("AqualightPh.css");
+        stage.setScene(scene);
+        initializeGlobalGUIObjects(scene);
+        
         final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         //Startup with new data handler map, to access
         DataHandler.DataHandlerList = new HashMap<>();
@@ -137,6 +166,18 @@ public class AqualightPhControllerGui extends Application {
         ReadProbeData data = new ReadProbeData();
         data.run();
 
+        
+        //Showing the graphical user interface
+        stage.show();
+
+    }
+
+    /**
+     * @brief Main method, which is called
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
         launch(args);
 
     }
