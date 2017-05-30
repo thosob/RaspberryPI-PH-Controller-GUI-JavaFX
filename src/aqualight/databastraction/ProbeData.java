@@ -5,56 +5,91 @@
  */
 package aqualight.databastraction;
 
-import aqualight.dataprocessing.IProbeData;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.sql.Date;
+
 
 /**
- * @brief Contains all Datahandlers
+ * @brief That's a data object
  * @author Thomas Sobieroy
  */
-public class ProbeData {
-    /**
-     * @brief type of the probe
-     */
-    private final String ProbeType;
-    /**
-     * @brief ProbeAddress o.sth.
-     */
-    public String ID;
-    /**
-     * @brief Containing values
-     */
-    public LinkedList<IProbeData> Values;
-    /**
-     * @brief Map with all DataHandlers - important for access in foreach iteration
-     */
-    public static HashMap<String, ProbeData> DataHandlerList;
+public class ProbeData implements IProbeData {
+    
+    private String Address;
+    private Date Time;
+    private double Value;
+    
     
     /**
-     * @param ProbeType Probetyp e.g. ph or conductivity
-     * @brief Make DataHandler Object - needed for each probe
-     * @param ID
-     * @param Values 
+     * @param address Adds the address 
+     * @param time adds the timestamp of the data
+     * @param value adds the value of the data
+     * @brief Make DataHandler Object - needed for each probe 
      */
-    public ProbeData(String ID, LinkedList<IProbeData> Values, String ProbeType){
-        this.ID = ID;
-        this.Values = Values;  
-        this.ProbeType = ProbeType;
+    public ProbeData(String address, Date time, double value){
+        Address = address;
+        Time = time;
+        Value = value;
     }
+
     /**
-     * @brief data handler should never be accessed by default constructor
+     * @return the Address
      */
-    private ProbeData(){
-        this.ProbeType = null;
+    public String getAddress() {
+        return Address;
     }
+
     /**
-     * @brief gives back probe type
-     * @return string with probetype e.g. "ph" or "conductivity"
+     * @param Address the Address to set
      */
-    public String getProbeType(){
-        return ProbeType;
+    public void setAddress(String Address) {
+        this.Address = Address;
+    }
+
+    /**
+     * @return the Time
+     */
+    public Date getTime() {
+        return Time;
+    }
+
+    /**
+     * @param Time the Time to set
+     */
+    public void setTime(Date Time) {
+        this.Time = Time;
+    }
+
+    /**
+     * @return the Value
+     */
+    public double getValue() {
+        return Value;
+    }
+
+    /**
+     * @param Value the Value to set
+     */
+    public void setValue(double Value) {
+        this.Value = Value;
+    }
+
+    @Override
+    public Date getTimeStamp() {
+        return getTime();
+    }
+
+    @Override
+    public void setTimeStamp(Date timeStamp) {
+        setTime(timeStamp);
+    }
+
+    @Override
+    public double getProbeValue() {
+        return getValue();
+    }
+
+    @Override
+    public void setProbeValue(double value) {
+        setValue(value);
     }        
-    
-    
 }

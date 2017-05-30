@@ -5,11 +5,7 @@
  */
 package aqualight.databastraction;
 
-import static aqualight.databastraction.ReadProbeData.getProbeType;
-import aqualight.dataprocessing.ECProbeData;
-import aqualight.dataprocessing.PhProbeData;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -95,12 +91,12 @@ public class Probes {
                 probe.setTemperatureID(Result.getInt(1));
                 probe.setPath(Result.getString(2));
                 probe.setAddress(Result.getString(2));                                                
-                probe.setName(Result.getString(3));   
+                probe.setName(Result.getString(3));                 
                 list.add(probe);
             }              
             Probes = list.toArray(new IProbe[list.size()]);
             
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
             try {
@@ -120,6 +116,21 @@ public class Probes {
      */
     public IProbe[] getProbes(){
         return Probes;
+    }
+    /**
+     * @brief returns the probe with knowledge of the address of the probe
+     * @param address of the probe
+     * @return IProbe which is regsitered under the address
+     */
+    public IProbe getProbe(String address){
+        IProbe tmp = null;
+        
+        for(IProbe probe : Probes){
+            if(probe.getAddress().equals(address)){
+                tmp = probe;
+            }
+        }
+        return tmp;
     }
     
     

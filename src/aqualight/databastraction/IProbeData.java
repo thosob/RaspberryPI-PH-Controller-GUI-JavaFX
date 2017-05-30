@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aqualight.dataprocessing;
+package aqualight.databastraction;
 
 import java.sql.Date;
 
@@ -40,12 +40,7 @@ public interface IProbeData {
      * @param value new value of probe
      */
     public void setProbeValue(double value);
-    
-    /**
-     * @brief gets type of the probe
-     * @return type of the probe e.g. ph or conductivity
-     */
-    public String getProbeType();
+        
     
     /**
      * @brief Force overriding of the equals method
