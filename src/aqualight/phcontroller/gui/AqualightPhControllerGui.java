@@ -12,9 +12,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -162,9 +166,38 @@ public class AqualightPhControllerGui extends Application {
 
         //Start runnable thread, such that database will be read every minute and
         //new data is stored in static model
-        //executor.scheduleAtFixedRate(new ReadProbeData() , 0, 1, TimeUnit.MINUTES);
-        ReadProbeData data = new ReadProbeData();
-        data.run();
+        executor.scheduleAtFixedRate(new ReadProbeData() , 1, 1, TimeUnit.MINUTES);
+        
+        //Manual start in correct thread
+        ReadProbeData readProbeData = new ReadProbeData();
+        readProbeData.run();
+        
+        //Get all addresses and display data of all addresses to the frontend
+        Iterator it = DataHandler.DataHandlerList.entrySet().iterator();
+        
+        //iterate over all datahandlers
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+
+            //Get address and list
+            String address = (String) pair.getKey();
+            LinkedList<IProbeData> list = ((DataHandler) pair.getValue()).Values;
+
+            //get probevalue and display that to the screen
+            double value = list.getLast().getProbeValue();
+
+            Label label = GetLabel(address);
+            if(label == null){
+                SetUpLabel(address);
+                label = GetLabel(address);
+                label.setText(String.valueOf(value));
+            }
+            else{
+                label.setText(String.valueOf(value));
+            }           
+            //concurrency  protection
+            it.remove();
+        }
 
         
         //Showing the graphical user interface

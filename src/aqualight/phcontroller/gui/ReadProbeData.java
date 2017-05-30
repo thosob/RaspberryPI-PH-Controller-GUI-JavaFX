@@ -83,35 +83,6 @@ public class ReadProbeData implements Runnable {
                 System.out.println(ex.getMessage());
             }
         }
-
-        //Get all addresses and display data of all addresses to the frontend
-        Iterator it = DataHandler.DataHandlerList.entrySet().iterator();
-        //iterate over all datahandlers
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-
-            //Get address and list
-            String address = (String) pair.getKey();
-            LinkedList<IProbeData> list = ((DataHandler) pair.getValue()).Values;
-
-            //get probevalue and display that to the screen
-            double value = list.getLast().getProbeValue();
-
-            Label label = GetLabel(address);
-            if(label == null){
-                SetUpLabel(address);
-                label = GetLabel(address);
-                label.setText(String.valueOf(value));
-            }
-            else{
-                label.setText(String.valueOf(value));
-            }
-            
-
-            //for concurrency ~ protection
-            it.remove();
-        }
-
     }
 
     /**

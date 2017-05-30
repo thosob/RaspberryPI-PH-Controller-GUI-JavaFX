@@ -16,8 +16,8 @@ import aqualight.phcontroller.gui.*;
 import javafx.scene.control.Label;
 
 /**
- *
- * @author root
+ * @brief small test class to make sure that all works fine
+ * @author Thomas Sovbieroy
  */
 public class AqualightPhControllerGuiTest {
     
