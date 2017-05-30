@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aqualight.phcontroller.gui;
+package aqualight.probes;
 
+import aqualight.probes.IProbeData;
 import java.sql.Date;
 
 /**
  * @brief Probe data model 
  * @author Thomas Sobieroy
  */
-public class ECProbeData implements IProbeData{
+public class PhProbeData implements IProbeData{
    
 
     //Ph Value 
-    private double ec;
+    private double ph;
     //Temperature probe Value
     private double temperature;
     private Date TimeStamp;
@@ -23,17 +24,17 @@ public class ECProbeData implements IProbeData{
      * @brief constructor for ph probe data
      * @param TimeStamp Time
      * @param temperature Temperature
-     * @param ec Conductivity
-     **/
-    public ECProbeData(Date TimeStamp, double temperature, double ec){
+     * @param ph PH
+     */
+    public PhProbeData(Date TimeStamp, double temperature, double ph){
         this.TimeStamp = TimeStamp;
         this.temperature = temperature;
-        this.ec = ec;
+        this.ph = ph;
     }
     /**
-     * @brief never let ec probe data exist without values
+     * @brief never let ph probe data exist without values
      */
-    private ECProbeData(){}
+    private PhProbeData(){}
     
     
 
@@ -64,17 +65,17 @@ public class ECProbeData implements IProbeData{
      */
     @Override
     public double getProbeValue() {
-        return ec;
+        return ph;
     }
 
     /**
-     * Set the value of ec
+     * Set the value of ph
      *
-     * @param ph new value of ec
+     * @param ph new value of ph
      */
     @Override
-    public void setProbeValue(double ec) {
-        this.ec = ec;
+    public void setProbeValue(double ph) {
+        this.ph = ph;
     }
 
                 
@@ -100,11 +101,11 @@ public class ECProbeData implements IProbeData{
     }        
     /**
      * @brief returns the type of the probe
-     * @return string to identify type of probe
+     * @return 
      */
     @Override
     public String getProbeType() {
-        return "ec";
+        return "ph";
     }
     
 }

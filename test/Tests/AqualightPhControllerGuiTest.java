@@ -6,13 +6,14 @@ package Tests;
  * and open the template in the editor.
  */
 
+import aqualight.databastraction.ProbeData;
+import aqualight.visualisation.AqualightPhControllerGui;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import aqualight.phcontroller.gui.*;
 import javafx.scene.control.Label;
 
 /**
@@ -26,7 +27,8 @@ public class AqualightPhControllerGuiTest {
     
     @BeforeClass
     public static void setUpClass() {
-        
+        //Set class fully up
+        AqualightPhControllerGui.main(null);
     }
     
     @AfterClass
@@ -35,8 +37,7 @@ public class AqualightPhControllerGuiTest {
     
     @Before
     public void setUp() {
-        //Set class fully up
-        AqualightPhControllerGui.main(null);
+        
     }
     
     @After
@@ -63,8 +64,13 @@ public class AqualightPhControllerGuiTest {
          Label l5 = AqualightPhControllerGui.GetLabel("77");
          Label l6 = AqualightPhControllerGui.GetTempLabel("77");
          assert(l5 != null);
-         assert(l6 != null);
-         
-         
+         assert(l6 != null);                  
+     }
+     /**
+      * @brief checks the probe data
+      */
+     @Test
+     public void checkProbeData(){
+         assert(ProbeData.DataHandlerList.size() > 10);
      }
 }

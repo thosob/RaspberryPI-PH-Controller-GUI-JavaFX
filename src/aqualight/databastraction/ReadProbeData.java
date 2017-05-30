@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aqualight.phcontroller.gui;
+package aqualight.databastraction;
 
-import static aqualight.phcontroller.gui.AqualightPhControllerGui.GetLabel;
-import static aqualight.phcontroller.gui.AqualightPhControllerGui.SetUpLabel;
+import aqualight.probes.PhProbeData;
+import aqualight.probes.ECProbeData;
+import static aqualight.visualisation.AqualightPhControllerGui.GetLabel;
+import static aqualight.visualisation.AqualightPhControllerGui.SetUpLabel;
 import java.sql.Date;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -45,14 +47,14 @@ public class ReadProbeData implements Runnable {
                 Address = Result.getString(1);
 
                 //If we cannot find the address as a value, the probe was not registered, yet.
-                if (!DataHandler.DataHandlerList.containsKey(Address)) {
+                if (!ProbeData.DataHandlerList.containsKey(Address)) {
                     //we have to initialize a new list, always using Address as ID
                     //to register the probe
-                    DataHandler.DataHandlerList.put(Address, new DataHandler(Address, new LinkedList<>(), getProbeType(Result)));
+                    ProbeData.DataHandlerList.put(Address, new ProbeData(Address, new LinkedList<>(), getProbeType(Result)));
                 }
 
                 //If data comes from ph probe
-                if (DataHandler.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1) {
+                if (ProbeData.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1) {
 
                     long date = Result.getLong(2);
                     Date realDate = new Date(date);
@@ -60,7 +62,7 @@ public class ReadProbeData implements Runnable {
                     double temperature = Result.getDouble(4);
 
                     //then we write the Data to a list
-                    DataHandler.DataHandlerList.get(Address).Values.add(new PhProbeData(realDate, temperature, ph));
+                    ProbeData.DataHandlerList.get(Address).Values.add(new PhProbeData(realDate, temperature, ph));
                 } else {
                     //Data comes from EC-Probe
                     long date = Result.getLong(2);
@@ -68,7 +70,7 @@ public class ReadProbeData implements Runnable {
                     double ec = Result.getDouble(3);
                     double temperature = Result.getDouble(4);
                     //This should be for ECProbe
-                    DataHandler.DataHandlerList.get(Address).Values.add(new ECProbeData(realDate, temperature, ec));
+                    ProbeData.DataHandlerList.get(Address).Values.add(new ECProbeData(realDate, temperature, ec));
                 }
             }
         } catch (Exception e) {

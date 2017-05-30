@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aqualight.phcontroller.gui;
+package aqualight.visualisation;
 
+import aqualight.databastraction.ProbeData;
+import aqualight.databastraction.ReadProbeData;
+import aqualight.probes.IProbeData;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -154,51 +157,15 @@ public class AqualightPhControllerGui extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        
         Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
         Scene scene = new Scene(root);        
         scene.getStylesheets().add("AqualightPh.css");
         stage.setScene(scene);
         initializeGlobalGUIObjects(scene);
+        loadValuesIntoGUI();
         
-        final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        //Startup with new data handler map, to access
-        DataHandler.DataHandlerList = new HashMap<>();
-
-        //Start runnable thread, such that database will be read every minute and
-        //new data is stored in static model
-        executor.scheduleAtFixedRate(new ReadProbeData() , 1, 1, TimeUnit.MINUTES);
-        
-        //Manual start in correct thread
-        ReadProbeData readProbeData = new ReadProbeData();
-        readProbeData.run();
-        
-        //Get all addresses and display data of all addresses to the frontend
-        Iterator it = DataHandler.DataHandlerList.entrySet().iterator();
-        
-        //iterate over all datahandlers
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-
-            //Get address and list
-            String address = (String) pair.getKey();
-            LinkedList<IProbeData> list = ((DataHandler) pair.getValue()).Values;
-
-            //get probevalue and display that to the screen
-            double value = list.getLast().getProbeValue();
-
-            Label label = GetLabel(address);
-            if(label == null){
-                SetUpLabel(address);
-                label = GetLabel(address);
-                label.setText(String.valueOf(value));
-            }
-            else{
-                label.setText(String.valueOf(value));
-            }           
-            //concurrency  protection
-            it.remove();
-        }
-
+        final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();        
         
         //Showing the graphical user interface
         stage.show();
@@ -343,6 +310,44 @@ public class AqualightPhControllerGui extends Application {
 
     public static void setTempLabelsName(Label[] tempLabelsName) {
         AqualightPhControllerGui.tempLabelsName = tempLabelsName;
+    }
+    /**
+     * @brief loads values into the gui from sqlite database
+     */
+    private void loadValuesIntoGUI() {
+        //Startup with new data handler map, to access
+        ProbeData.DataHandlerList = new HashMap<>();
+        
+        //Manually get new data
+        ReadProbeData readProbeData = new ReadProbeData();
+        readProbeData.run();        
+        
+        //Get all addresses and display data of all addresses to the frontend
+        Iterator it = ProbeData.DataHandlerList.entrySet().iterator();
+        
+        //iterate over all datahandlers
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+
+            //Get address and list
+            String address = (String) pair.getKey();
+            LinkedList<IProbeData> list = ((ProbeData) pair.getValue()).Values;
+
+            //get probevalue and display that to the screen
+            double value = list.getLast().getProbeValue();
+            
+            Label label = GetLabel(address);
+            if(label == null){
+                SetUpLabel(address);
+                label = GetLabel(address);
+                label.setText(String.valueOf(value));
+            }
+            else{
+                label.setText(String.valueOf(value));
+            }           
+            //concurrency  protection
+            it.remove();
+        }
     }
 
     
