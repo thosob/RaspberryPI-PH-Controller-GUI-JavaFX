@@ -18,6 +18,7 @@ public class ECProbe implements IProbe{
     private String Name;
     private int LowCalibration;
     private int HighCalibration;    
+    private int TemperatureID;
 
     @Override
     public String getAddress() {
@@ -79,4 +80,16 @@ public class ECProbe implements IProbe{
         this.HighCalibration = HighCalibration;
     }
     
+    public int getTemperatureID() {
+        return TemperatureID;
+    }
+
+    public void setTemperatureID(int TemperatureID) {
+        this.TemperatureID = TemperatureID;
+    }
+
+    @Override
+    public IProbeData getLastValue() {
+        return Data.get(Data.size() - 1);
+    }
 }

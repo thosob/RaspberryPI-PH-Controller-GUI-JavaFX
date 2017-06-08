@@ -5,11 +5,7 @@
  */
 package aqualight.databastraction;
 
-import static aqualight.databastraction.ReadProbeData.getProbeType;
-import aqualight.dataprocessing.ECProbeData;
-import aqualight.dataprocessing.PhProbeData;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +23,9 @@ public class Probes {
     
     /**
      * @brief gets all Probes from database and registers them
+     * do not use this constructor, unless the object in settings is not set
+     * or you actually need a new one for some reason, this operation is memory 
+     * heavy, because all probe data has to be assigned to the probe
      */
     public Probes(){
         
@@ -86,7 +85,7 @@ public class Probes {
             }
             
             //Initialize ph probes
-            statement = Connection.prepareStatement("SELECT * FROM temparatureSensor");
+            statement = Connection.prepareStatement("SELECT temparatureId, path, name FROM temparatureSensor");
             Result = statement.executeQuery();
             
             //Go through all data and add it to the list
@@ -120,6 +119,20 @@ public class Probes {
      */
     public IProbe[] getProbes(){
         return Probes;
+    }
+    /**
+     * @brief gets a probe back
+     * @param address of the probe
+     * @return the probe object or null if not successful
+     */
+    public IProbe getProbe(String address){
+        IProbe resProbe = null;
+        for(IProbe probe : Probes){
+            if(probe.getAddress().equals(address)){
+                resProbe = probe;
+            }
+        }
+        return resProbe;        
     }
     
     

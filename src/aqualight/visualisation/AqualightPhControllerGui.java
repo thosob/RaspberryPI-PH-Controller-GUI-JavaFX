@@ -5,23 +5,19 @@
  */
 package aqualight.visualisation;
 
-import aqualight.databastraction.ProbeData;
-import aqualight.databastraction.ReadProbeData;
-import aqualight.dataprocessing.IProbeData;
+import aqualight.databastraction.GlobalObjects;
+import aqualight.databastraction.IProbe;
+import aqualight.databastraction.PhProbe;
+import aqualight.databastraction.Probes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -176,7 +172,7 @@ public class AqualightPhControllerGui extends Application {
      * @brief Main method, which is called
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) {                    
         
         launch(args);
 
@@ -315,38 +311,25 @@ public class AqualightPhControllerGui extends Application {
      * @brief loads values into the gui from sqlite database
      */
     private void loadValuesIntoGUI() {
-        //Startup with new data handler map, to access
-        ProbeData.DataHandlerList = new HashMap<>();
         
-        //Manually get new data
-        ReadProbeData readProbeData = new ReadProbeData();
-        readProbeData.run();        
-        
-        //Get all addresses and display data of all addresses to the frontend
-        Iterator it = ProbeData.DataHandlerList.entrySet().iterator();
-        
-        //iterate over all datahandlers
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-
-            //Get address and list
-            String address = (String) pair.getKey();
-            LinkedList<IProbeData> list = ((ProbeData) pair.getValue()).Values;
-
-            //get probevalue and display that to the screen
-            double value = list.getLast().getProbeValue();
+        //Get Probes
+        Probes probes = GlobalObjects.getProbes();
+                                    
+        for(IProbe probe : probes.getProbes()){            
             
-            Label label = GetLabel(address);
+            //get probevalue and display that to the screen
+            double value = probe.getLastValue().getProbeValue();
+            
+            //Write data into labels
+            Label label = GetLabel(probe.getAddress());
             if(label == null){
-                SetUpLabel(address);
-                label = GetLabel(address);
+                SetUpLabel(probe.getAddress());
+                label = GetLabel(probe.getAddress());
                 label.setText(String.valueOf(value));
             }
             else{
                 label.setText(String.valueOf(value));
-            }           
-            //concurrency  protection
-            it.remove();
+            }                       
         }
     }
 

@@ -78,6 +78,14 @@ public class TemperatureProbe implements IProbe {
     public void setTemperatureID(int TemperatureID) {
         this.TemperatureID = TemperatureID;
     }
+    /**
+     * @brief gets the last value that was added to list
+     * @return 
+     */
+    @Override
+    public IProbeData getLastValue() {
+        return Data.get(Data.size() - 1);
+    }
      
     
 }

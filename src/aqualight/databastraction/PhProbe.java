@@ -22,7 +22,6 @@ public class PhProbe implements IProbe {
     private int TemperatureID;
     
     
-    
     @Override
     public String getAddress() {
         return Address;
@@ -41,16 +40,13 @@ public class PhProbe implements IProbe {
     @Override
     public void setName(String name) {
         Name = name;
-    }
-
-    @Override
-    public List<IProbeData> getValues() {
-        return Data;
-    }
+    }    
 
     @Override
     public void setValue(IProbeData data) {
+        
         if(!Data.contains(data)){
+            
             Data.add(data);
         }
     }
@@ -85,6 +81,19 @@ public class PhProbe implements IProbe {
 
     public void setTemperatureID(int TemperatureID) {
         this.TemperatureID = TemperatureID;
+    }
+    /**
+     * @brief gets the values (note: Data is derived)
+     * @return 
+     */
+    @Override
+    public List<IProbeData> getValues() {
+        return Data;
+    }
+    @Override
+    public IProbeData getLastValue() {
+        
+        return Data.get(Data.size() - 1);
     }
     
 }

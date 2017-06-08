@@ -52,5 +52,10 @@ public interface IProbe {
      * @brief adds Data to the probe
      */
     public void setValue(IProbeData data);
+    /**
+     * @brief gets the Data record with the last timestamp
+     * @return IProbeData 
+     */
+    public IProbeData getLastValue();
     
 }

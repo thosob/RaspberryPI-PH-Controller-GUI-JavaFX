@@ -7,18 +7,12 @@ package aqualight.databastraction;
 
 import aqualight.dataprocessing.PhProbeData;
 import aqualight.dataprocessing.ECProbeData;
-import static aqualight.visualisation.AqualightPhControllerGui.GetLabel;
-import static aqualight.visualisation.AqualightPhControllerGui.SetUpLabel;
 import java.sql.Date;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-import javafx.scene.control.Label;
 
 /**
  * @brief Reads runnable data
@@ -26,60 +20,69 @@ import javafx.scene.control.Label;
  */
 public class ReadProbeData implements Runnable {
 
+    private boolean firstrun = true;
+    
     //Assembles all data in model 
     @Override
     public void run() {
-        Connection Connection = null;
-        String Address = "";
-
+        Connection connection = null;
+        String address;
+             
+        
         try {
             // db parameters
-            String Url = "jdbc:sqlite:resources/symbiofilter.db";
+            String url = "jdbc:sqlite:resources/symbiofilter.db";
+            ResultSet Result;
+            //Get all registered probes
+            Probes probes = GlobalObjects.getProbes();
+            IProbe probe;
+            
             // create a connection to the database
-            Connection = DriverManager.getConnection(Url);
-
-            //Should be limited to a weeks data, so the raspberry pi is not killed
-            PreparedStatement statement = Connection.prepareStatement("SELECT address, time, value FROM queue");
-            ResultSet Result = statement.executeQuery();
-            String Date = null;
+            connection = DriverManager.getConnection(url);                        
+                        
+            if(firstrun){
+            
+                //Should be limited to a couple of weeks or months data, so the raspberry pi is not killed
+                //address, time, temperature and ph or conductivity are firmly set
+                //ph or conductivity can be null, but not both should be or else we have a problem.
+                PreparedStatement statement = connection.prepareStatement("SELECT address, time,temperature, ph, conductivity, mV FROM queue ORDER BY time ASC");            
+                Result = statement.executeQuery();                            
+                firstrun = true;
+            }
+            else{
+                //It is vital to keep the order, the list will not have correct last value data item
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM (SELECT address, time,temperature, ph, conductivity, mV FROM queue ORDER BY time DESC LIMIT 50) ORDER BY time ASC");            
+                Result = statement.executeQuery();                                                            
+            }                        
+            
             //Go through all data and add it to the list
             while (Result.next()) {
-                Address = Result.getString(1);
-
-                //If we cannot find the address as a value, the probe was not registered, yet.
-                if (!ProbeData.DataHandlerList.containsKey(Address)) {
-                    //we have to initialize a new list, always using Address as ID
-                    //to register the probe
-                    ProbeData.DataHandlerList.put(Address, new ProbeData(Address, new LinkedList<>(), getProbeType(Result)));
-                }
-
-                //If data comes from ph probe
-                if (ProbeData.DataHandlerList.get(Address).getProbeType().compareTo("ph") > -1) {
-
+                address = Result.getString(1);
+                probe = probes.getProbe(address);                                
+                
+                //Assign values, based on class of the registered probe
+                //For ph consider class PhProbe
+                if(probe.getClass().equals(PhProbe.class)){
                     long date = Result.getLong(2);
                     Date realDate = new Date(date);
-                    double ph = Result.getDouble(3);
-                    double temperature = Result.getDouble(4);
-
-                    //then we write the Data to a list
-                    ProbeData.DataHandlerList.get(Address).Values.add(new PhProbeData(realDate, temperature, ph));
-                } else {
-                    //Data comes from EC-Probe
+                    PhProbeData data = new PhProbeData(realDate, Result.getDouble(3), Result.getDouble(4));
+                    probe.setValue(data);
+                }
+                //For ec consider class ECProbe
+                if(probe.getClass().equals(ECProbe.class)){
                     long date = Result.getLong(2);
                     Date realDate = new Date(date);
-                    double ec = Result.getDouble(3);
-                    double temperature = Result.getDouble(4);
-                    //This should be for ECProbe
-                    ProbeData.DataHandlerList.get(Address).Values.add(new ECProbeData(realDate, temperature, ec));
-                }
-            }
+                    ECProbeData data = new ECProbeData(realDate, Result.getDouble(3), Result.getDouble(5));
+                    probe.setValue(data);
+                }                                                                                
+            }            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
             try {
-                if (Connection != null) {
+                if (connection != null) {
                     //And close connection, to free up space
-                    Connection.close();
+                    connection.close();
                 }
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
