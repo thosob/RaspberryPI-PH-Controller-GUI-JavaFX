@@ -122,6 +122,7 @@ public class Probes {
     }
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @brief gets a probe back
      * @param address of the probe
      * @return the probe object or null if not successful
@@ -134,6 +135,21 @@ public class Probes {
             }
         }
         return resProbe;        
+=======
+     * @brief returns the probe with knowledge of the address of the probe
+     * @param address of the probe
+     * @return IProbe which is regsitered under the address
+     */
+    public IProbe getProbe(String address){
+        IProbe tmp = null;
+        
+        for(IProbe probe : Probes){
+            if(probe.getAddress().equals(address)){
+                tmp = probe;
+            }
+        }
+        return tmp;
+>>>>>>> origin/master
 =======
      * @brief returns the probe with knowledge of the address of the probe
      * @param address of the probe
