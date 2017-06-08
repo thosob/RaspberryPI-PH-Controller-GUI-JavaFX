@@ -5,7 +5,6 @@
  */
 package aqualight.databastraction;
 
-import aqualight.dataprocessing.IProbeData;
 import java.util.List;
 
 /**

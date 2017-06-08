@@ -35,28 +35,28 @@ public class AqualightPhControllerGui extends Application {
     /**
      * @brief stores all probe labels with id
      */
-    private static HashMap<String, Label> map = new HashMap<String, Label>();
+    private HashMap<String, Label> map = new HashMap<>();
     /**
      * @brief map for temperature labels with id
      */
-    private static HashMap<String, Label> tempMap = new HashMap<String, Label>();
+    private HashMap<String, Label> tempMap = new HashMap<>();
     /**
      * @brief probe label names
      */
-    private static Label[] labels;
+    private Label[] labels;
     /**
      * @brief temperature labels
      */
-    private static Label[] tempLabels;
+    private Label[] tempLabels;
     /**
      * @brief probe values     
      */
-    private static Label[] labelsName;
+    private Label[] labelsName;
     /**
      * @brief temperature values
      */
-    private static Label[] tempLabelsName;
-
+    private Label[] tempLabelsName;
+    
     /**
      * @brief writes mapping to disk
      * @string which data to save (probe, temp, whatever)
@@ -183,7 +183,7 @@ public class AqualightPhControllerGui extends Application {
      * @param address of the probe
      * @param label that is used
      */
-    public static void SetUpLabel(String address, Label label) {
+    public void SetUpLabel(String address, Label label) {
         //Update key value of the map
         if (address != null & label != null) {
             map.put(address, label);
@@ -195,7 +195,7 @@ public class AqualightPhControllerGui extends Application {
      * @brief sets up label for probe 
      * @param address of the probe
      */
-    public static void SetUpLabel(String address){
+    public void SetUpLabel(String address){
         //check for address else do nothing more
         if(!map.containsKey(address)){            
             //go over all labels
@@ -217,7 +217,7 @@ public class AqualightPhControllerGui extends Application {
      * @param address of the probe
      * @param label that is used
      */
-    public static void SetUpTemperatureLabel(String address, Label label) {
+    public void SetUpTemperatureLabel(String address, Label label) {
         //Update key value of the map
         if (address != null & label != null) {
             tempMap.put(address, label);
@@ -231,7 +231,7 @@ public class AqualightPhControllerGui extends Application {
      * @param address address is needed as key
      * @return javafx-label
      */
-    public static Label GetLabel(String address) {
+    public Label GetLabel(String address) {
         return map.get(address);
     }
 
@@ -240,7 +240,7 @@ public class AqualightPhControllerGui extends Application {
      * @param id is needed as key
      * @return javafx-label
      */
-    public static Label GetTempLabel(String id) {
+    public Label GetTempLabel(String id) {
         return tempMap.get(id);
     }
 
@@ -248,7 +248,7 @@ public class AqualightPhControllerGui extends Application {
      * @brief gets all probe labels
      * @return ProbeLabel Array
      */
-    public static Label[] GetAllProbeLabels() {
+    public Label[] GetAllProbeLabels() {
         return labels;
     }
 
@@ -256,19 +256,19 @@ public class AqualightPhControllerGui extends Application {
      * @brief returns temperature labels
      * @return temperature labels
      */
-    public static Label[] GetAllTemperatureLabels() {
+    public Label[] GetAllTemperatureLabels() {
         return tempLabels;
     }
     
-       public static HashMap<String, Label> getMap() {
+       public HashMap<String, Label> getMap() {
         return map;
     }
 
-    public static void setMap(HashMap<String, Label> map) {
+    public void setMap(HashMap<String, Label> map) {
         AqualightPhControllerGui.map = map;
     }
 
-    public static HashMap<String, Label> getTempMap() {
+    public  HashMap<String, Label> getTempMap() {
         return tempMap;
     }
 

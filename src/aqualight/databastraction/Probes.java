@@ -94,12 +94,12 @@ public class Probes {
                 probe.setTemperatureID(Result.getInt(1));
                 probe.setPath(Result.getString(2));
                 probe.setAddress(Result.getString(2));                                                
-                probe.setName(Result.getString(3));   
+                probe.setName(Result.getString(3));                 
                 list.add(probe);
             }              
             Probes = list.toArray(new IProbe[list.size()]);
             
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
             try {
@@ -121,6 +121,7 @@ public class Probes {
         return Probes;
     }
     /**
+<<<<<<< HEAD
      * @brief gets a probe back
      * @param address of the probe
      * @return the probe object or null if not successful
@@ -133,6 +134,21 @@ public class Probes {
             }
         }
         return resProbe;        
+=======
+     * @brief returns the probe with knowledge of the address of the probe
+     * @param address of the probe
+     * @return IProbe which is regsitered under the address
+     */
+    public IProbe getProbe(String address){
+        IProbe tmp = null;
+        
+        for(IProbe probe : Probes){
+            if(probe.getAddress().equals(address)){
+                tmp = probe;
+            }
+        }
+        return tmp;
+>>>>>>> origin/master
     }
     
     
