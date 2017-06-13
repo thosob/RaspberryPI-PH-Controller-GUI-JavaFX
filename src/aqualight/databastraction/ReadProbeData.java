@@ -5,8 +5,6 @@
  */
 package aqualight.databastraction;
 
-import aqualight.dataprocessing.PhProbeData;
-import aqualight.dataprocessing.ECProbeData;
 import java.sql.Date;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -65,14 +63,14 @@ public class ReadProbeData implements Runnable {
                 if(probe.getClass().equals(PhProbe.class)){
                     long date = Result.getLong(2);
                     Date realDate = new Date(date);
-                    PhProbeData data = new PhProbeData(realDate, Result.getDouble(3), Result.getDouble(4));
+                    ProbeData data = new ProbeData(address, realDate, Result.getDouble(4));
                     probe.setValue(data);
                 }
                 //For ec consider class ECProbe
                 if(probe.getClass().equals(ECProbe.class)){
                     long date = Result.getLong(2);
                     Date realDate = new Date(date);
-                    ECProbeData data = new ECProbeData(realDate, Result.getDouble(3), Result.getDouble(5));
+                    ProbeData data = new ProbeData(address, realDate, Result.getDouble(5));
                     probe.setValue(data);
                 }                                                                                
             }            

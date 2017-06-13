@@ -56,5 +56,7 @@ public interface IProbe {
      * @return IProbeData 
      */
     public IProbeData getLastValue();
+
+    public boolean hasValues();
     
 }

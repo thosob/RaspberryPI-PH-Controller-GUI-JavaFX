@@ -38,7 +38,8 @@ public class Settings {
      * @return true if successfully updated and false if not
      */
     public boolean updateProbeData(){
-        // TO DO
+        //not implemented yet
+        return true;
     }
     
 }

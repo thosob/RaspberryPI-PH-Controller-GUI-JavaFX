@@ -6,7 +6,7 @@ package Tests;
  * and open the template in the editor.
  */
 
-import aqualight.databastraction.ProbeData;
+import aqualight.databastraction.*;
 import aqualight.visualisation.AqualightPhControllerGui;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -21,12 +21,13 @@ import javafx.scene.control.Label;
  * @author Thomas Sovbieroy
  */
 public class AqualightPhControllerGuiTest {
+        
     
     public AqualightPhControllerGuiTest() {
     }
     
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() {   
         //Set class fully up
         AqualightPhControllerGui.main(null);
     }
@@ -71,6 +72,15 @@ public class AqualightPhControllerGuiTest {
       */
      @Test
      public void checkProbeData(){
-         assert(ProbeData.DataHandlerList.size() > 10);
+         Probes probes = GlobalObjects.getProbes();
+         
+         //assert at least one probe is connected
+         assert( probes.getProbes().length > 1);
+         
+        //assert probe data exists for each probe
+        for(IProbe probe : probes.getProbes()){            
+            assert(probe.hasValues());
+        }
+         
      }
 }

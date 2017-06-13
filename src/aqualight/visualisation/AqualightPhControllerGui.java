@@ -35,27 +35,27 @@ public class AqualightPhControllerGui extends Application {
     /**
      * @brief stores all probe labels with id
      */
-    private HashMap<String, Label> map = new HashMap<>();
+    private static HashMap<String, Label> map = new HashMap<>();
     /**
      * @brief map for temperature labels with id
      */
-    private HashMap<String, Label> tempMap = new HashMap<>();
+    private static HashMap<String, Label> tempMap = new HashMap<>();
     /**
      * @brief probe label names
      */
-    private Label[] labels;
+    private static Label[] labels;
     /**
      * @brief temperature labels
      */
-    private Label[] tempLabels;
+    private static Label[] tempLabels;
     /**
      * @brief probe values     
      */
-    private Label[] labelsName;
+    private static Label[] labelsName;
     /**
      * @brief temperature values
      */
-    private Label[] tempLabelsName;
+    private static Label[] tempLabelsName;
     
     /**
      * @brief writes mapping to disk
@@ -231,7 +231,7 @@ public class AqualightPhControllerGui extends Application {
      * @param address address is needed as key
      * @return javafx-label
      */
-    public Label GetLabel(String address) {
+    public static Label GetLabel(String address) {
         return map.get(address);
     }
 
@@ -240,7 +240,7 @@ public class AqualightPhControllerGui extends Application {
      * @param id is needed as key
      * @return javafx-label
      */
-    public Label GetTempLabel(String id) {
+    public static Label GetTempLabel(String id) {
         return tempMap.get(id);
     }
 
@@ -248,7 +248,7 @@ public class AqualightPhControllerGui extends Application {
      * @brief gets all probe labels
      * @return ProbeLabel Array
      */
-    public Label[] GetAllProbeLabels() {
+    public static Label[] GetAllProbeLabels() {
         return labels;
     }
 
@@ -256,7 +256,7 @@ public class AqualightPhControllerGui extends Application {
      * @brief returns temperature labels
      * @return temperature labels
      */
-    public Label[] GetAllTemperatureLabels() {
+    public static Label[] GetAllTemperatureLabels() {
         return tempLabels;
     }
     

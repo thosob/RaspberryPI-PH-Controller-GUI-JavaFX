@@ -91,4 +91,9 @@ public class ECProbe implements IProbe{
     public IProbeData getLastValue() {
         return Data.get(Data.size() - 1);
     }
+    
+     @Override
+    public boolean hasValues() {
+        return !Data.isEmpty();
+    }
 }

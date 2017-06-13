@@ -94,5 +94,10 @@ public class PhProbe implements IProbe {
         
         return Data.get(Data.size() - 1);
     }
+
+    @Override
+    public boolean hasValues() {
+        return !Data.isEmpty();
+    }
     
 }
