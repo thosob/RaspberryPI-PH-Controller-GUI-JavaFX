@@ -7,7 +7,6 @@ package aqualight.visualisation;
 
 import aqualight.databastraction.GlobalObjects;
 import aqualight.databastraction.IProbe;
-import aqualight.databastraction.PhProbe;
 import aqualight.databastraction.Probes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,7 +30,13 @@ import javafx.stage.Stage;
  * @author Thomas Sboieroy
  */
 public class AqualightPhControllerGui extends Application {
-
+    /**
+     * @brief contains the scene, which can be used
+     */
+    private static Scene scene;
+    
+    private static Stage guiStage;
+    
     /**
      * @brief stores all probe labels with id
      */
@@ -154,15 +159,17 @@ public class AqualightPhControllerGui extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
+       
+       
         Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
-        Scene scene = new Scene(root);        
+        scene = new Scene(root);        
         scene.getStylesheets().add("AqualightPh.css");
         stage.setScene(scene);
         initializeGlobalGUIObjects(scene);
         loadValuesIntoGUI();
         
         final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();        
-        
+        setGuiStage(stage);
         //Showing the graphical user interface
         stage.show();
 
@@ -331,6 +338,34 @@ public class AqualightPhControllerGui extends Application {
                 label.setText(String.valueOf(value));
             }                       
         }
+    }
+
+    /**
+     * @return the scene
+     */
+    public static Scene getScene() {
+        return scene;
+    }
+
+    /**
+     * @param aScene the scene to set
+     */
+    public static void setScene(Scene aScene) {
+        scene = aScene;
+    }
+
+    /**
+     * @return the guiStage
+     */
+    public static Stage getGuiStage() {
+        return guiStage;
+    }
+
+    /**
+     * @param aGuiStage the guiStage to set
+     */
+    public static void setGuiStage(Stage aGuiStage) {
+        guiStage = aGuiStage;
     }
 
     

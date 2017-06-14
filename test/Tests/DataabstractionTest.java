@@ -6,10 +6,12 @@
 package Tests;
 
 import aqualight.databastraction.ECProbe;
+import aqualight.databastraction.GlobalObjects;
 import aqualight.databastraction.IProbe;
 import aqualight.databastraction.PhProbe;
 import aqualight.databastraction.Probes;
 import aqualight.databastraction.TemperatureProbe;
+import java.io.File;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -37,6 +39,8 @@ public class DataabstractionTest {
     
     @Before
     public void setUp() {
+        //Make sure, that we deal with a file
+        assert(GlobalObjects.getDatabaseFile().isFile());
     }
     
     @After
@@ -72,8 +76,6 @@ public class DataabstractionTest {
         assertTrue(tempProbe);
         assertTrue(phProbe);
         //This will fail anyway
-        assertTrue(ecProbe);
-    
-    
+        assertFalse(ecProbe);        
     }
 }

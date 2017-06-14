@@ -28,11 +28,10 @@ public class Probes {
         LinkedList<IProbe> list = new LinkedList<>();
         
         try {
-            // db parameters
-            String Url = "jdbc:sqlite:resources/symbiofilter.db";
-            // create a connection to the database
-            Connection = DriverManager.getConnection(Url);
 
+            // create a connection to the database
+            Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
+            System.out.println(GlobalObjects.getDatabaseFile().isFile());
             //Initialize conductivity probes
             PreparedStatement statement = Connection.prepareStatement("SELECT * FROM conductivityProbe");
             ResultSet Result = statement.executeQuery();                       
@@ -95,7 +94,8 @@ public class Probes {
             Probes = list.toArray(new IProbe[list.size()]);
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Probes.java: "+e.getMessage());
+            System.err.println(e);
         } finally {
             try {
                 if (Connection != null) {

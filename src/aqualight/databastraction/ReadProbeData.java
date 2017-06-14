@@ -27,16 +27,15 @@ public class ReadProbeData implements Runnable {
         String address;
              
         
-        try {
-            // db parameters
-            String url = "jdbc:sqlite:resources/symbiofilter.db";
+        try {                     
             ResultSet Result;
             //Get all registered probes
             Probes probes = GlobalObjects.getProbes();
             IProbe probe;
             
-            // create a connection to the database
-            connection = DriverManager.getConnection(url);                        
+            // create a connection to the database            
+            connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());  
+            
                         
             if(firstrun){
             

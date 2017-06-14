@@ -29,11 +29,9 @@ public class ProbeDataReader{
         String Address;
         LinkedList<ProbeData> list = new LinkedList<>();
 
-        try {
-            // db parameters
-            String Url = "jdbc:sqlite:resources/symbiofilter.db";
+        try {           
             // create a connection to the database
-            Connection = DriverManager.getConnection(Url);
+            Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());
 
             //Should be limited to a weeks data, so the raspberry pi is not killed
             PreparedStatement statement = Connection.prepareStatement("SELECT address, time, value FROM queue");

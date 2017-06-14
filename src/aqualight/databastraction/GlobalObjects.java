@@ -5,6 +5,8 @@
  */
 package aqualight.databastraction;
 
+import java.io.File;
+
 /**
  * @brief has a list of global objects, that are used over multiple fxml pages
  * @author Thomas Sobieroy
@@ -12,8 +14,12 @@ package aqualight.databastraction;
 public class GlobalObjects {
     
     private static Probes Probes;
+    private final static File Database = new File("/symbiofilter.db");       
     
-    
+    /**
+     * @brief gets probe objects
+     * @return 
+     */
     public static Probes getProbes(){        
         if(Probes == null){
             Probes = new Probes();
@@ -23,6 +29,21 @@ public class GlobalObjects {
         }
         
         return Probes;        
+    }
+    /**
+     * @brief gets database path
+     * @return 
+     */
+    public static String getDatabasePath(){        
+        return "jdbc:sqlite:"+Database.getAbsolutePath();
+    }
+    
+    /**
+     * @brief gets database path
+     * @return 
+     */
+    public static File getDatabaseFile(){        
+        return Database;
     }
     
    
