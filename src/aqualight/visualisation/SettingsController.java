@@ -28,11 +28,8 @@ import javafx.scene.text.Text;
  *
  * @author tsobieroy
  */
-public class StatisticController implements Initializable {
+public class SettingsController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
     @FXML
     private TilePane tilePane;
     
@@ -131,6 +128,6 @@ public class StatisticController implements Initializable {
         }
         System.out.println("Could not determine menu title");
         return false;
-    }    
+    }   
     
 }
