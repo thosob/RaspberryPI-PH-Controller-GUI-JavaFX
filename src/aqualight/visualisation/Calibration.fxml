@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
@@ -12,7 +11,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aqualight.visualisation.CalibrationController">   
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" style="-fx-background-color: white;" stylesheets="@../../../resources/AqualightPh.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aqualight.visualisation.CalibrationController">   
 
     <children>
         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
@@ -20,28 +19,28 @@
                 <Image url="/aqualightlogo-final.png" />
             </image>
         </ImageView>
-        <Pane layoutX="136.0" layoutY="164.0" prefHeight="200" prefWidth="635.0">
+        <Pane layoutX="89.0" layoutY="164.0" prefHeight="200" prefWidth="682.0">
          <children>
-            <MenuButton id="phProbe" layoutX="43.0" layoutY="18.0" mnemonicParsing="false">
+            <MenuButton id="phProbe" layoutX="3.0" layoutY="18.0" mnemonicParsing="false">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
               </items>
             </MenuButton>
-            <Label layoutX="3.0" layoutY="23.0" text="PH:" />
-            <Label layoutX="326.0" layoutY="21.0" text="Leitwert:" />
-            <MenuButton id="ecProbe" layoutX="396.0" layoutY="17.0" mnemonicParsing="false">
+            <Label layoutX="-37.0" layoutY="23.0" text="PH:" />
+            <Label layoutX="286.0" layoutY="21.0" text="Leitwert:" />
+            <MenuButton id="ecProbe" layoutX="356.0" layoutY="17.0" mnemonicParsing="false">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
               </items>
             </MenuButton>
-            <Button layoutX="146.0" layoutY="16.0" minWidth="100.0" mnemonicParsing="false" text="PH4 Kalibrieren" />
-            <Button layoutX="146.0" layoutY="56.0" minWidth="100.0" mnemonicParsing="false" text="PH7 Kalibrieren" />
-            <Button layoutX="146.0" layoutY="96.0" minWidth="100.0" mnemonicParsing="false" text="PH9 Kalibrieren" />
-            <Button layoutX="504.0" layoutY="16.0" minWidth="120.0" mnemonicParsing="false" text="76 µS Kalbrieren" />
-            <Button layoutX="504.0" layoutY="56.0" minWidth="120.0" mnemonicParsing="false" text="1278 µS Kalibrieren" />
-            <Button layoutX="504.0" layoutY="96.0" minWidth="120.0" mnemonicParsing="false" text="80 mS Kalibrieren" />
+            <Button layoutX="106.0" layoutY="16.0" minWidth="100.0" mnemonicParsing="false" text="PH4 Kalibrieren" />
+            <Button layoutX="106.0" layoutY="56.0" minWidth="100.0" mnemonicParsing="false" text="PH7 Kalibrieren" />
+            <Button layoutX="106.0" layoutY="96.0" minWidth="100.0" mnemonicParsing="false" text="PH9 Kalibrieren" />
+            <Button layoutX="464.0" layoutY="16.0" minWidth="120.0" mnemonicParsing="false" text="76 µS Kalbrieren" />
+            <Button layoutX="464.0" layoutY="56.0" minWidth="120.0" mnemonicParsing="false" text="1278 µS Kalibrieren" />
+            <Button layoutX="464.0" layoutY="96.0" minWidth="120.0" mnemonicParsing="false" text="80 mS Kalibrieren" />
             <Separator layoutX="278.0" layoutY="9.0" orientation="VERTICAL" prefHeight="200.0" />
          </children>
         </Pane>

@@ -45,7 +45,7 @@ public class SettingsController implements Initializable {
         tilePane.getChildren().add(createTile("Übersicht", Color.CADETBLUE));
         tilePane.getChildren().add(createTile("Eichen", Color.DIMGREY));
         tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
-        tilePane.getChildren().add(createTile("Einstellungen", Color.DARKBLUE));
+        tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
 
     }
 
