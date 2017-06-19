@@ -33,7 +33,7 @@ public class ProbeDataReader{
             // create a connection to the database
             Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());
 
-            //Should be limited to a weeks data, so the raspberry pi is not killed
+            //Should be limited to a hours data, so the raspberry pi is not killed
             PreparedStatement statement = Connection.prepareStatement("SELECT address, time, value FROM queue");
             ResultSet Result = statement.executeQuery();
             String Date = null;

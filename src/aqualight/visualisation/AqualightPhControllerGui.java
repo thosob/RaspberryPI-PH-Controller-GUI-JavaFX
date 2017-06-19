@@ -8,6 +8,7 @@ package aqualight.visualisation;
 import aqualight.databastraction.GlobalObjects;
 import aqualight.databastraction.IProbe;
 import aqualight.databastraction.Probes;
+import aqualight.dataprocessing.PhControlValueDispatcher;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -202,7 +203,7 @@ public class AqualightPhControllerGui extends Application {
      * @brief sets up label for probe 
      * @param address of the probe
      */
-    public void SetUpLabel(String address){
+    public static void SetUpLabel(String address){
         //check for address else do nothing more
         if(!map.containsKey(address)){            
             //go over all labels
@@ -319,25 +320,9 @@ public class AqualightPhControllerGui extends Application {
      */
     private void loadValuesIntoGUI() {
         
-        //Get Probes
-        Probes probes = GlobalObjects.getProbes();
-                                    
-        for(IProbe probe : probes.getProbes()){            
-            
-            //get probevalue and display that to the screen
-            double value = probe.getLastValue().getProbeValue();
-            
-            //Write data into labels
-            Label label = GetLabel(probe.getAddress());
-            if(label == null){
-                SetUpLabel(probe.getAddress());
-                label = GetLabel(probe.getAddress());
-                label.setText(String.valueOf(value));
-            }
-            else{
-                label.setText(String.valueOf(value));
-            }                       
-        }
+        Thread t = new Thread(new PhControlValueDispatcher());        
+        t.start();
+        
     }
 
     /**
