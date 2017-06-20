@@ -8,13 +8,16 @@ package aqualight.visualisation;
 import aqualight.databastraction.GlobalObjects;
 import aqualight.databastraction.IProbe;
 import aqualight.databastraction.Probes;
-import aqualight.dataprocessing.PhControlValueDispatcher;
+import aqualight.dataprocessing.ControlValueDispatcher;
+import aqualight.dataprocessing.ControlValueListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -167,9 +170,7 @@ public class AqualightPhControllerGui extends Application {
         scene.getStylesheets().add("AqualightPh.css");
         stage.setScene(scene);
         initializeGlobalGUIObjects(scene);
-        loadValuesIntoGUI();
-        
-        final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();        
+        loadValuesIntoGUI();                    
         setGuiStage(stage);
         //Showing the graphical user interface
         stage.show();
@@ -320,9 +321,15 @@ public class AqualightPhControllerGui extends Application {
      */
     private void loadValuesIntoGUI() {
         
-        Thread t = new Thread(new PhControlValueDispatcher());        
-        t.start();
-        
+        ControlValueDispatcher dis = new ControlValueDispatcher();
+        //Start another thread, so the getting control values does not block the gui
+        Thread t = new Thread(dis);                
+        t.start();        
+        //Use control value listener to listen to changes in the probe data
+        ControlValueListener listener = new ControlValueListener(map, tempMap);                       
+        dis.addObserver(listener);
+        int observers = dis.countObservers();
+        dis.hasChanged();
     }
 
     /**

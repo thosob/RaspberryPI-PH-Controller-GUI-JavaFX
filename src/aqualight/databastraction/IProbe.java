@@ -17,7 +17,7 @@ public interface IProbe {
     /**
      * @brief Data 
      */
-    final List<IProbeData> Data = new LinkedList<>();
+    final List<IProbeData> Data = new LinkedList<>();        
     
     /**
      * @brief gets the address of a probe
@@ -58,5 +58,6 @@ public interface IProbe {
     public IProbeData getLastValue();
 
     public boolean hasValues();
+    
     
 }
