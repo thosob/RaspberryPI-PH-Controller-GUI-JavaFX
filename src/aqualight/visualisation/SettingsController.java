@@ -113,7 +113,7 @@ public class SettingsController implements Initializable {
                 System.out.println(menuTitle);
                 return true;
             }
-            if (menuTitle.equals("Einstellungen")) {
+            if (menuTitle.equals("Einstellung")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Settings.fxml"));
                  
                 AqualightPhControllerGui.setScene(new Scene(root));

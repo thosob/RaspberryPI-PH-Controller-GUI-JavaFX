@@ -36,8 +36,9 @@ public class ControlValueListener implements Observer {
     public void update(Observable o, Object arg) {
         HashMap<String,String> resultMap = (HashMap<String,String>) arg;
         
-        resultMap.keySet().forEach((s) -> {
-            getMap().get(s).setText(resultMap.get(s));
+        resultMap.keySet().forEach((s) -> {            
+            Label l = map.get(s);
+            l.setText(resultMap.get(s));
         });
         AqualightPhControllerGui.getGuiStage().show();
     }
