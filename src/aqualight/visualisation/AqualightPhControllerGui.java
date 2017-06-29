@@ -16,12 +16,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -34,44 +36,90 @@ import javafx.stage.Stage;
  * @author Thomas Sboieroy
  */
 public class AqualightPhControllerGui extends Application {
+    
+    public static AqualightPhControllerGui GUI = null;
+    
     /**
      * @brief contains the scene, which can be used
      */
-    private static Scene scene;
-    
+    private static Scene scene;    
     private static Stage guiStage;
     
     /**
-     * @brief stores all probe labels with id
+     * @brief name of the probes
      */
-    private static HashMap<String, Label> map = new HashMap<>();
+    @FXML
+    private Label p1Name;
+    @FXML
+    private Label p2Name;
+    @FXML
+    private Label p3Name;
+    @FXML
+    private Label p4Name;
+    @FXML
+    private Label p5Name;
+    @FXML
+    private Label p6Name;
+    
     /**
-     * @brief map for temperature labels with id
+     * @brief values of the probes
      */
-    private static HashMap<String, Label> tempMap = new HashMap<>();
+    @FXML
+    private Label p1;
+    @FXML
+    private Label p2;
+    @FXML
+    private Label p3;
+    @FXML
+    private Label p4;
+    @FXML
+    private Label p5;
+    @FXML 
+    private Label p6;
+    
+    @FXML
+    private Label temp1;
+    @FXML
+    private Label temp2;
+    @FXML
+    private Label t1;
+    @FXML
+    private Label t2;
+    
+    
     /**
-     * @brief probe label names
-     */
-    private static Label[] labels;
+     * Explanation:
+     *  There are two types of labels. Labels with names and labels with 
+     *  values. Labels with names are now known as nameLabels. Labels with
+     *  values are now known as valueLabels. In the maps hardware addresses 
+     *  are the keys for the labels.
+     */    
+    private LinkedList<LabelContainer> LabelContainer = new LinkedList<>();
+    
     /**
-     * @brief temperature labels
+     * @brief contains address as key and position of label in array
      */
-    private static Label[] tempLabels;
+    private HashMap<Integer, String> LabelAddress = new HashMap<>();    
     /**
-     * @brief probe values     
+     * @brief contains address as key and name
      */
-    private static Label[] labelsName;
+    private HashMap<String, String> LabelNames = new HashMap<>();
+ 
+        
+    
     /**
-     * @brief temperature values
+     * @brief assign itself such, that it is globally usable
      */
-    private static Label[] tempLabelsName;
+    public AqualightPhControllerGui(){
+        GUI = this;
+    }
     
     /**
      * @brief writes mapping to disk
      * @string which data to save (probe, temp, whatever)
      * @return true if successfully executed
      */
-    private static boolean WriteMapToDisk(String data, HashMap object) {
+    public static boolean WriteMapToDisk(String data, HashMap object) {
 
         try {
             //Try with ressource writer, object outputstream
@@ -93,7 +141,7 @@ public class AqualightPhControllerGui extends Application {
      * @param object global variable that is to be replaced with the loaded data
      * @return
      */
-    private static HashMap LoadMapFromDisk(String data, HashMap object) {
+    public static HashMap LoadMapFromDisk(String data, HashMap object) {
         try {
             try (FileInputStream fin = new FileInputStream(data); ObjectInputStream ois = new ObjectInputStream(fin)) {
                 object = (HashMap) ois.readObject();
@@ -109,54 +157,35 @@ public class AqualightPhControllerGui extends Application {
      * @param scene contains fully load scene      
      **/
     public void initializeGlobalGUIObjects(Scene scene){
-        int i = 0;
-        //Lookup all notes by css class an create a value list
-        Set<Node> labelSet = scene.getRoot().lookupAll(".probeValueText");
-        //initialize array size
-        labels = new Label[labelSet.size()];
-        //iterate over all labels in set
-        i = 0;
-        for (Node n : labelSet) {
-            labels[i] = (Label) n;
-            i++;
-        }
-        
-        //Lookup all notes by css class and create a label list
-        Set<Node> labelSetName = scene.getRoot().lookupAll(".probeLabelText");
-        //initialize array size
-        labelsName = new Label[labelSetName.size()];
-        //iterate over all labels in set
-        i = 0;
-        for (Node n : labelSetName) {
-            labelsName[i] = (Label) n;
-            i++;
-        }
-
-        //Lookup all temp notes by css class for value list of labels
-        Set<Node> tempLabelSet = scene.getRoot().lookupAll(".tempValueText");
-        //initialize array size
-        tempLabels = new Label[tempLabelSet.size()];
-        //iterate over all labels in set
-        i = 0;
-        for (Node n : tempLabelSet) {
-            tempLabels[i] = (Label) n;
-            i++;
-        }
-        
-        //Lookup all temp notes by css class to build temperature labels 
-        Set<Node> tempLabelNameSet = scene.getRoot().lookupAll(".tempLabelText");
-        //initialize array size
-        tempLabelsName = new Label[tempLabelNameSet.size()];
-        //iterate over all labels in set
-        i = 0;
-        for (Node n : tempLabelNameSet) {
-            tempLabelsName[i] = (Label) n;
-            i++;
-        }
-
-        //Initialize Hashmaps
-        LoadMapFromDisk("map", map);
-        LoadMapFromDisk("tempMap", tempMap);
+        //load assingments from disk
+        LabelAddress = LoadMapFromDisk("LabelAddress", getLabelAddress());
+        LabelNames = LoadMapFromDisk("LabelNames", getLabelNames());
+        //Adding all labels to our label container
+        LabelContainer lc1 = new LabelContainer(1, p1, p1Name, getLabelAddress().get(1));                                
+        String tmpAddress = getLabelAddress().get(1);
+        p1Name.setText(LabelNames.get(tmpAddress));
+        LabelContainer.add(lc1);
+        LabelContainer lc2 = new LabelContainer(2, p2, p2Name, getLabelAddress().get(2));                                
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(2))));
+        LabelContainer.add(lc2);
+        LabelContainer lc3 = new LabelContainer(3, p3, p3Name, getLabelAddress().get(3));      
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(3))));
+        LabelContainer.add(lc3);
+        LabelContainer lc4 = new LabelContainer(4, p4, p4Name, getLabelAddress().get(4));                                
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(4))));
+        LabelContainer.add(lc4);
+        LabelContainer lc5 = new LabelContainer(5, p5, p5Name, getLabelAddress().get(5));    
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(5))));
+        LabelContainer.add(lc5);
+        LabelContainer lc6 = new LabelContainer(6, p6, p6Name, getLabelAddress().get(6));      
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(6))));
+        LabelContainer.add(lc6);        
+        LabelContainer lc7 = new LabelContainer(7, t1, temp1, getLabelAddress().get(7)); 
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(7))));
+        LabelContainer.add(lc7);
+        LabelContainer lc8 = new LabelContainer(8, t2, temp2, getLabelAddress().get(8));    
+        p1Name.setText(getLabelNames().get((getLabelAddress().get(8))));
+        LabelContainer.add(lc8);
     }
     
 
@@ -185,134 +214,46 @@ public class AqualightPhControllerGui extends Application {
     }
 
     /**
+     * @param LabelIndex
+     * @param labelName  name of the label             
      * @brief Sets up label for probe
-     * @param address of the probe
-     * @param label that is used
+     * @param address of the probe     
      */
-    public void SetUpLabel(String address, Label label) {
+    public void SetUpLabel(int LabelIndex, String labelName, String address) {
+                
         //Update key value of the map
-        if (address != null & label != null) {
-            map.put(address, label);
-            //saves data in disk
-            WriteMapToDisk("map", map);
+        if (address != null & labelName != null) {                                   
+            getLabelAddress().put(LabelIndex, address);                
         }
-    }
+        WriteMapToDisk("LabelAddress", getLabelAddress());
+    }    
+
+    
     /**
-     * @brief sets up label for probe 
-     * @param address of the probe
+     * @brief gets the name of the label
+     * @param address     
      */
-    public static void SetUpLabel(String address){
-        //check for address else do nothing more
-        if(!map.containsKey(address)){            
-            //go over all labels
-            for(Label l : labels){
-                //check if label is already used
-                if(!map.containsValue(l)){
-                    //if not set up our mapping
-                    map.put(address, l);
-                    //everything is fine we've set up the label
-                    return;
-                }
+    public void SetLabelName(String address, String name){
+        for(LabelContainer l : LabelContainer){
+            if(l.getAddress().equals(address)){
+                l.getNameLabel().setText(name);
             }
-        }
-        WriteMapToDisk("map",map);                
-    }
-
-    /**
-     * @brief Sets up label for probe
-     * @param address of the probe
-     * @param label that is used
-     */
-    public void SetUpTemperatureLabel(String address, Label label) {
-        //Update key value of the map
-        if (address != null & label != null) {
-            tempMap.put(address, label);
-            //saves data in disk
-            WriteMapToDisk("tempMap", tempMap);
-        }
-    }
-
-    /**
-     * @brief gets the label
-     * @param address address is needed as key
-     * @return javafx-label
-     */
-    public static Label GetLabel(String address) {
-        return map.get(address);
-    }
-
-    /**
-     * @brief gets the temperature label
-     * @param id is needed as key
-     * @return javafx-label
-     */
-    public static Label GetTempLabel(String id) {
-        return tempMap.get(id);
-    }
-
-    /**
-     * @brief gets all probe labels
-     * @return ProbeLabel Array
-     */
-    public static Label[] GetAllProbeLabels() {
-        return labels;
-    }
-
-    /**
-     * @brief returns temperature labels
-     * @return temperature labels
-     */
-    public static Label[] GetAllTemperatureLabels() {
-        return tempLabels;
+        }                
     }
     
-       public HashMap<String, Label> getMap() {
-        return map;
+    /**
+     * @brief gets the name of the label
+     * @param address     
+     */
+    public void SetLabelValue(String address, String value){
+        for(LabelContainer l : LabelContainer){
+            if(l.getAddress().equals(address)){
+                l.getValueLabel().setText(value);
+            }
+        }                
     }
+        
 
-    public void setMap(HashMap<String, Label> map) {
-        AqualightPhControllerGui.map = map;
-    }
-
-    public  HashMap<String, Label> getTempMap() {
-        return tempMap;
-    }
-
-    public static void setTempMap(HashMap<String, Label> tempMap) {
-        AqualightPhControllerGui.tempMap = tempMap;
-    }
-
-    public static Label[] getLabels() {
-        return labels;
-    }
-
-    public static void setLabels(Label[] labels) {
-        AqualightPhControllerGui.labels = labels;
-    }
-
-    public static Label[] getTempLabels() {
-        return tempLabels;
-    }
-
-    public static void setTempLabels(Label[] tempLabels) {
-        AqualightPhControllerGui.tempLabels = tempLabels;
-    }
-
-    public static Label[] getLabelsName() {
-        return labelsName;
-    }
-
-    public static void setLabelsName(Label[] labelsName) {
-        AqualightPhControllerGui.labelsName = labelsName;
-    }
-
-    public static Label[] getTempLabelsName() {
-        return tempLabelsName;
-    }
-
-    public static void setTempLabelsName(Label[] tempLabelsName) {
-        AqualightPhControllerGui.tempLabelsName = tempLabelsName;
-    }
     /**
      * @brief loads values into the gui from sqlite database
      */
@@ -323,7 +264,7 @@ public class AqualightPhControllerGui extends Application {
         Thread t = new Thread(dis);                
         t.start();        
         //Use control value listener to listen to changes in the probe data
-        ControlValueListener listener = new ControlValueListener(map, tempMap);                       
+        ControlValueListener listener = new ControlValueListener();                       
         dis.addObserver(listener);
         int observers = dis.countObservers();
         dis.hasChanged();
@@ -355,6 +296,26 @@ public class AqualightPhControllerGui extends Application {
      */
     public static void setGuiStage(Stage aGuiStage) {
         guiStage = aGuiStage;
+    }
+
+    /**
+     * @return the LabelAddress
+     */
+    public HashMap<Integer, String> getLabelAddress() {
+        if(LabelAddress.size() == 0){
+            this.LabelAddress = LoadMapFromDisk("LabelAddress", this.LabelAddress);
+        }
+        return this.LabelAddress;
+    }
+
+    /**
+     * @return the LabelNames
+     */
+    public HashMap<String, String> getLabelNames() {
+        if(LabelNames.size() == 0){
+            this.LabelNames = LoadMapFromDisk("LabelNames", this.LabelNames);
+        }
+        return this.LabelNames;
     }
 
     

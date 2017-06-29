@@ -5,16 +5,20 @@
  */
 package aqualight.visualisation;
 
+import aqualight.databastraction.GlobalObjects;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.StackPane;
@@ -32,6 +36,18 @@ public class SettingsController implements Initializable {
 
     @FXML
     private TilePane tilePane;
+    @FXML
+    private TextField deviceName;
+    @FXML
+    private TextField serverURL;
+    @FXML 
+    private ComboBox i2caddress;
+    @FXML
+    private ComboBox labelAssignment;
+    @FXML
+    private TextField labelText;
+
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -46,7 +62,6 @@ public class SettingsController implements Initializable {
         tilePane.getChildren().add(createTile("Eichen", Color.DIMGREY));
         tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
         tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
-
     }
 
     /**
@@ -76,6 +91,36 @@ public class SettingsController implements Initializable {
             event.consume();
         });
         return stack;
+    }
+    /**
+     * @brief on save server click change the names also in database
+     * @param event 
+     */
+    @FXML
+    private void saveServerClick(ActionEvent event) {
+        String URL = serverURL.getText();
+        String device = deviceName.getText();
+        if(!device.isEmpty()){
+            GlobalObjects.setDeviceName(device);
+        }
+        if(!URL.isEmpty()){
+            GlobalObjects.setServerName(URL);
+        }
+               
+    }
+    
+    @FXML
+    private void addClick(ActionEvent event) {
+        String address = i2caddress.getSelectionModel().getSelectedItem().toString();
+        String label = labelAssignment.getSelectionModel().getSelectedItem().toString();
+        String labelString = labelText.getText();
+        //AqualightPhControllerGui.setLabelsName(address, Integer.parseInt(label), labelString);
+        
+    }
+    
+    @FXML
+    private void saveTempClick(ActionEvent event){
+        
     }
 
     /**

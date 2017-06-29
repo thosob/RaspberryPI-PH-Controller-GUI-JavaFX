@@ -11,8 +11,6 @@ import aqualight.databastraction.IProbe;
 import aqualight.databastraction.PhProbe;
 import aqualight.databastraction.Probes;
 import aqualight.databastraction.TemperatureProbe;
-import java.io.File;
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

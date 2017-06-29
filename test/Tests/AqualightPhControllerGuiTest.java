@@ -8,6 +8,7 @@ package Tests;
 
 import aqualight.databastraction.*;
 import aqualight.visualisation.AqualightPhControllerGui;
+import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,11 +26,41 @@ public class AqualightPhControllerGuiTest {
     
     public AqualightPhControllerGuiTest() {
     }
-    
+    /**
+     * @brief set up class
+     */
     @BeforeClass
     public static void setUpClass() {   
         //Set class fully up
-        AqualightPhControllerGui.main(null);
+        AqualightPhControllerGui gui = new AqualightPhControllerGui(); 
+        HashMap<Integer,String> labelAddress = gui.getLabelAddress();
+        HashMap<String, String> nameStrings = gui.getLabelNames();   
+        //Mock-Data if no data is there
+        if(labelAddress.size() == 0){
+            labelAddress.put(1, "77");
+            labelAddress.put(2, "78");
+            labelAddress.put(3, "79");
+            labelAddress.put(4, "80");
+            labelAddress.put(5, "81");
+            labelAddress.put(6, "82");
+            //Temperature
+            labelAddress.put(7, "83");
+            labelAddress.put(8, "84");            
+            AqualightPhControllerGui.WriteMapToDisk("LabelAddress", labelAddress);
+        }
+        if(nameStrings.size() == 0){
+            nameStrings.put("77", "P1");
+            nameStrings.put("78", "P2");
+            nameStrings.put("79", "P3");
+            nameStrings.put("80", "P4");
+            nameStrings.put("81", "P5");
+            nameStrings.put("82", "P6");
+            //Temperature
+            nameStrings.put("83", "Temp1");
+            nameStrings.put("84", "Temp2");
+            AqualightPhControllerGui.WriteMapToDisk("LabelNames", nameStrings);
+        }
+        
     }
     
     @AfterClass
@@ -38,6 +69,8 @@ public class AqualightPhControllerGuiTest {
     
     @Before
     public void setUp() {
+        
+        
         
     }
     
@@ -50,22 +83,7 @@ public class AqualightPhControllerGuiTest {
      */
      @Test
      public void checkGlobalFields() {
-         Label[] l1 = AqualightPhControllerGui.GetAllTemperatureLabels();
-         Label[] l2 = AqualightPhControllerGui.GetAllProbeLabels();
-         Label[] l3 = AqualightPhControllerGui.getTempLabels();
-         Label[] l4 = AqualightPhControllerGui.getTempLabelsName();
-         
-        //Check if all labels are in the maps
-         assert(l1.length == 2);
-         assert(l2.length == 8);
-         assert(l3.length == 2);
-         assert(l4.length == 2);
-         
-         //Check if maps are load correctly
-         Label l5 = AqualightPhControllerGui.GetLabel("77");
-         Label l6 = AqualightPhControllerGui.GetTempLabel("77");
-         assert(l5 != null);
-         assert(l6 != null);                  
+           
      }
      /**
       * @brief checks the probe data

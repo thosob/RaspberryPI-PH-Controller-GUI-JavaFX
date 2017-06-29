@@ -16,44 +16,22 @@ import javafx.scene.control.Label;
  * @author tsobieroy
  */
 public class ControlValueListener implements Observer {
-
-    private HashMap<String, Label> map;
-    private HashMap<String, Label> tempMap;
+  
     
     /**
      * @brief Here you find the control value listener
-     * @param labels labels from gui
-     * @param tempLabels temp labels from gui
-     * @param map map with all labels, to define which label we need
-     * @param tempMap tempMap with all labels, to define which, we will need
      */
-    public ControlValueListener(HashMap<String, Label> map, HashMap<String, Label> tempMap){
-        this.map = map;
-        this.tempMap = tempMap;
+    public ControlValueListener(){        
     }
     
     @Override
     public void update(Observable o, Object arg) {
+        //First string is address, second string is value
         HashMap<String,String> resultMap = (HashMap<String,String>) arg;
-        
-        resultMap.keySet().forEach((s) -> {            
-            Label l = map.get(s);
-            l.setText(resultMap.get(s));
-        });
-        AqualightPhControllerGui.getGuiStage().show();
-    }
-
-    /**
-     * @return the map
-     */
-    public HashMap<String, Label> getMap() {
-        return map;
-    }
-
-    /**
-     * @return the tempMap
-     */
-    public HashMap<String, Label> getTempMap() {
-        return tempMap;
+                
+        resultMap.keySet().forEach((address) -> {     
+            //Get label by hardware address
+            AqualightPhControllerGui.GUI.SetLabelValue(address, resultMap.get(address));                        
+        });        
     }
 }

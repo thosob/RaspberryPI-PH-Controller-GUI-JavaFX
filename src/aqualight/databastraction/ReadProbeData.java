@@ -72,7 +72,8 @@ public class ReadProbeData implements Runnable {
                     ProbeData data = new ProbeData(address, realDate, Result.getDouble(5));
                     probe.setValue(data);
                 }                                                                                
-            }            
+            }
+            connection.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
