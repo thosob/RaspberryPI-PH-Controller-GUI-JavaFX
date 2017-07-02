@@ -45,67 +45,9 @@ public class AqualightPhControllerGui extends Application {
     private static Scene scene;    
     private static Stage guiStage;
     
-    /**
-     * @brief name of the probes
-     */
-    @FXML
-    private Label p1Name;
-    @FXML
-    private Label p2Name;
-    @FXML
-    private Label p3Name;
-    @FXML
-    private Label p4Name;
-    @FXML
-    private Label p5Name;
-    @FXML
-    private Label p6Name;
-    
-    /**
-     * @brief values of the probes
-     */
-    @FXML
-    private Label p1;
-    @FXML
-    private Label p2;
-    @FXML
-    private Label p3;
-    @FXML
-    private Label p4;
-    @FXML
-    private Label p5;
-    @FXML 
-    private Label p6;
-    
-    @FXML
-    private Label temp1;
-    @FXML
-    private Label temp2;
-    @FXML
-    private Label t1;
-    @FXML
-    private Label t2;
+   
     
     
-    /**
-     * Explanation:
-     *  There are two types of labels. Labels with names and labels with 
-     *  values. Labels with names are now known as nameLabels. Labels with
-     *  values are now known as valueLabels. In the maps hardware addresses 
-     *  are the keys for the labels.
-     */    
-    private LinkedList<LabelContainer> LabelContainer = new LinkedList<>();
-    
-    /**
-     * @brief contains address as key and position of label in array
-     */
-    private HashMap<Integer, String> LabelAddress = new HashMap<>();    
-    /**
-     * @brief contains address as key and name
-     */
-    private HashMap<String, String> LabelNames = new HashMap<>();
- 
-        
     
     /**
      * @brief assign itself such, that it is globally usable
@@ -152,41 +94,7 @@ public class AqualightPhControllerGui extends Application {
             return null;
         }
     }
-    /**
-     * @brief initialize all global gui objects, scene has to be load fully
-     * @param scene contains fully load scene      
-     **/
-    public void initializeGlobalGUIObjects(Scene scene){
-        //load assingments from disk
-        LabelAddress = LoadMapFromDisk("LabelAddress", getLabelAddress());
-        LabelNames = LoadMapFromDisk("LabelNames", getLabelNames());
-        //Adding all labels to our label container
-        LabelContainer lc1 = new LabelContainer(1, p1, p1Name, getLabelAddress().get(1));                                
-        String tmpAddress = getLabelAddress().get(1);
-        p1Name.setText(LabelNames.get(tmpAddress));
-        LabelContainer.add(lc1);
-        LabelContainer lc2 = new LabelContainer(2, p2, p2Name, getLabelAddress().get(2));                                
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(2))));
-        LabelContainer.add(lc2);
-        LabelContainer lc3 = new LabelContainer(3, p3, p3Name, getLabelAddress().get(3));      
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(3))));
-        LabelContainer.add(lc3);
-        LabelContainer lc4 = new LabelContainer(4, p4, p4Name, getLabelAddress().get(4));                                
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(4))));
-        LabelContainer.add(lc4);
-        LabelContainer lc5 = new LabelContainer(5, p5, p5Name, getLabelAddress().get(5));    
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(5))));
-        LabelContainer.add(lc5);
-        LabelContainer lc6 = new LabelContainer(6, p6, p6Name, getLabelAddress().get(6));      
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(6))));
-        LabelContainer.add(lc6);        
-        LabelContainer lc7 = new LabelContainer(7, t1, temp1, getLabelAddress().get(7)); 
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(7))));
-        LabelContainer.add(lc7);
-        LabelContainer lc8 = new LabelContainer(8, t2, temp2, getLabelAddress().get(8));    
-        p1Name.setText(getLabelNames().get((getLabelAddress().get(8))));
-        LabelContainer.add(lc8);
-    }
+  
     
 
     @Override
@@ -194,12 +102,12 @@ public class AqualightPhControllerGui extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
         scene = new Scene(root);        
         scene.getStylesheets().add("AqualightPh.css");
-        stage.setScene(scene);
-        initializeGlobalGUIObjects(scene);
-        loadValuesIntoGUI();                    
+        stage.setScene(scene);       
         setGuiStage(stage);
         //Showing the graphical user interface
         stage.show();
+        
+        
 
     }
 
@@ -213,62 +121,7 @@ public class AqualightPhControllerGui extends Application {
 
     }
 
-    /**
-     * @param LabelIndex
-     * @param labelName  name of the label             
-     * @brief Sets up label for probe
-     * @param address of the probe     
-     */
-    public void SetUpLabel(int LabelIndex, String labelName, String address) {
-                
-        //Update key value of the map
-        if (address != null & labelName != null) {                                   
-            getLabelAddress().put(LabelIndex, address);                
-        }
-        WriteMapToDisk("LabelAddress", getLabelAddress());
-    }    
-
     
-    /**
-     * @brief gets the name of the label
-     * @param address     
-     */
-    public void SetLabelName(String address, String name){
-        for(LabelContainer l : LabelContainer){
-            if(l.getAddress().equals(address)){
-                l.getNameLabel().setText(name);
-            }
-        }                
-    }
-    
-    /**
-     * @brief gets the name of the label
-     * @param address     
-     */
-    public void SetLabelValue(String address, String value){
-        for(LabelContainer l : LabelContainer){
-            if(l.getAddress().equals(address)){
-                l.getValueLabel().setText(value);
-            }
-        }                
-    }
-        
-
-    /**
-     * @brief loads values into the gui from sqlite database
-     */
-    private void loadValuesIntoGUI() {
-        
-        ControlValueDispatcher dis = new ControlValueDispatcher();
-        //Start another thread, so the getting control values does not block the gui
-        Thread t = new Thread(dis);                
-        t.start();        
-        //Use control value listener to listen to changes in the probe data
-        ControlValueListener listener = new ControlValueListener();                       
-        dis.addObserver(listener);
-        int observers = dis.countObservers();
-        dis.hasChanged();
-    }
 
     /**
      * @return the scene
@@ -298,25 +151,7 @@ public class AqualightPhControllerGui extends Application {
         guiStage = aGuiStage;
     }
 
-    /**
-     * @return the LabelAddress
-     */
-    public HashMap<Integer, String> getLabelAddress() {
-        if(LabelAddress.size() == 0){
-            this.LabelAddress = LoadMapFromDisk("LabelAddress", this.LabelAddress);
-        }
-        return this.LabelAddress;
-    }
-
-    /**
-     * @return the LabelNames
-     */
-    public HashMap<String, String> getLabelNames() {
-        if(LabelNames.size() == 0){
-            this.LabelNames = LoadMapFromDisk("LabelNames", this.LabelNames);
-        }
-        return this.LabelNames;
-    }
+   
 
     
 

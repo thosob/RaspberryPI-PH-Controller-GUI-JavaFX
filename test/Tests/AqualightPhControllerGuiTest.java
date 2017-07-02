@@ -8,6 +8,7 @@ package Tests;
 
 import aqualight.databastraction.*;
 import aqualight.visualisation.AqualightPhControllerGui;
+import aqualight.visualisation.PhControlController;
 import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,7 +33,7 @@ public class AqualightPhControllerGuiTest {
     @BeforeClass
     public static void setUpClass() {   
         //Set class fully up
-        AqualightPhControllerGui gui = new AqualightPhControllerGui(); 
+        PhControlController gui = new PhControlController(); 
         HashMap<Integer,String> labelAddress = gui.getLabelAddress();
         HashMap<String, String> nameStrings = gui.getLabelNames();   
         //Mock-Data if no data is there

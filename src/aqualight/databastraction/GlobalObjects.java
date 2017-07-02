@@ -21,7 +21,7 @@ import java.util.LinkedList;
 public class GlobalObjects {
     
     private static Probes Probes;
-    private final static File Database = new File("/home/tsobieroy/symbiofilter.db");       
+    private final static File Database = new File("resources/symbiofilter.db");       
     private static String ServerName;
     private static String DeviceName;
     

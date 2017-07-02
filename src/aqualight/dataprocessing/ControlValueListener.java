@@ -6,6 +6,7 @@
 package aqualight.dataprocessing;
 
 import aqualight.visualisation.AqualightPhControllerGui;
+import aqualight.visualisation.PhControlController;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -31,7 +32,7 @@ public class ControlValueListener implements Observer {
                 
         resultMap.keySet().forEach((address) -> {     
             //Get label by hardware address
-            AqualightPhControllerGui.GUI.SetLabelValue(address, resultMap.get(address));                        
+            PhControlController.PHControl.SetLabelValue(address, resultMap.get(address));                        
         });        
     }
 }
