@@ -15,17 +15,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.StackPane;
@@ -135,29 +131,29 @@ public class PhControlController implements Initializable {
         loadValuesIntoGUI();             
         
         //Adding all labels to our label container
-        LabelContainer lc1 = new LabelContainer(1, p1, p1Name, getLabelAddress().get(1));                                
+        LabelContainer lc1 = new LabelContainer(1, p1Name, p1, getLabelAddress().get(1));                                
         String tmpAddress = getLabelAddress().get(1);
         p1Name.setText(LabelNames.get(tmpAddress));
         LabelContainer.add(lc1);
-        LabelContainer lc2 = new LabelContainer(2, p2, p2Name, getLabelAddress().get(2));                                
+        LabelContainer lc2 = new LabelContainer(2,  p2Name, p2,getLabelAddress().get(2));                                
         p2Name.setText(getLabelNames().get((getLabelAddress().get(2))));
         LabelContainer.add(lc2);
-        LabelContainer lc3 = new LabelContainer(3, p3, p3Name, getLabelAddress().get(3));      
+        LabelContainer lc3 = new LabelContainer(3,  p3Name, p3,getLabelAddress().get(3));      
         p3Name.setText(getLabelNames().get((getLabelAddress().get(3))));
         LabelContainer.add(lc3);
-        LabelContainer lc4 = new LabelContainer(4, p4, p4Name, getLabelAddress().get(4));                                
+        LabelContainer lc4 = new LabelContainer(4,  p4Name,p4, getLabelAddress().get(4));                                
         p4Name.setText(getLabelNames().get((getLabelAddress().get(4))));
         LabelContainer.add(lc4);
-        LabelContainer lc5 = new LabelContainer(5, p5, p5Name, getLabelAddress().get(5));    
+        LabelContainer lc5 = new LabelContainer(5, p5Name,p5,  getLabelAddress().get(5));    
         p5Name.setText(getLabelNames().get((getLabelAddress().get(5))));
         LabelContainer.add(lc5);
-        LabelContainer lc6 = new LabelContainer(6, p6, p6Name, getLabelAddress().get(6));      
+        LabelContainer lc6 = new LabelContainer(6,  p6Name,p6, getLabelAddress().get(6));      
         p6Name.setText(getLabelNames().get((getLabelAddress().get(6))));
         LabelContainer.add(lc6);        
-        LabelContainer lc7 = new LabelContainer(7, t1, temp1, getLabelAddress().get(7)); 
+        LabelContainer lc7 = new LabelContainer(7,  temp1, t1,getLabelAddress().get(7)); 
         temp1.setText(getLabelNames().get((getLabelAddress().get(7))));
         LabelContainer.add(lc7);
-        LabelContainer lc8 = new LabelContainer(8, t2, temp2, getLabelAddress().get(8));    
+        LabelContainer lc8 = new LabelContainer(8,  temp2, t2,getLabelAddress().get(8));    
         temp2.setText(getLabelNames().get((getLabelAddress().get(8))));
         LabelContainer.add(lc8);
         PHControl = this;
@@ -271,15 +267,17 @@ public class PhControlController implements Initializable {
 
     
     /**
+     * @param name sets up the name of the label
      * @brief gets the name of the label
-     * @param address     
+     * @param address sets up the address of the label
      */
     public void SetLabelName(String address, String name){
         for(LabelContainer l : LabelContainer){
             if(l.getAddress().equals(address)){
                 l.getNameLabel().setText(name);
             }
-        }                
+        } 
+        WriteMapToDisk("LabelNames", getLabelAddress());
     }
     
     /**

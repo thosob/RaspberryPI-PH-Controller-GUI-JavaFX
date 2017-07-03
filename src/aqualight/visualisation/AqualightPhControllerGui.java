@@ -5,30 +5,16 @@
  */
 package aqualight.visualisation;
 
-import aqualight.databastraction.GlobalObjects;
-import aqualight.databastraction.IProbe;
-import aqualight.databastraction.Probes;
-import aqualight.dataprocessing.ControlValueDispatcher;
-import aqualight.dataprocessing.ControlValueListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**

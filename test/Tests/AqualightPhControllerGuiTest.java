@@ -32,7 +32,17 @@ public class AqualightPhControllerGuiTest {
      */
     @BeforeClass
     public static void setUpClass() {   
-        //Set class fully up
+      
+        
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+                   
         PhControlController gui = new PhControlController(); 
         HashMap<Integer,String> labelAddress = gui.getLabelAddress();
         HashMap<String, String> nameStrings = gui.getLabelNames();   
@@ -60,19 +70,8 @@ public class AqualightPhControllerGuiTest {
             nameStrings.put("83", "Temp1");
             nameStrings.put("84", "Temp2");
             AqualightPhControllerGui.WriteMapToDisk("LabelNames", nameStrings);
-        }
-        
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-        
-        
-        
+        } 
+          
     }
     
     @After
@@ -80,12 +79,28 @@ public class AqualightPhControllerGuiTest {
     }
 
     /**
-     *  @brief test to make sure, that global fields be o.k.
-     */
-     @Test
-     public void checkGlobalFields() {
-           
-     }
+    *  @brief test to make sure, that global fields be o.k.
+    */
+    @Test
+    public void checkMaps() {
+        //Checks if setting up the maps worked
+        PhControlController gui = new PhControlController(); 
+        HashMap<Integer,String> labelAddress = gui.getLabelAddress();
+        HashMap<String, String> labelNames = gui.getLabelNames();   
+        //has values because of SetUp method
+        assert(!labelAddress.isEmpty());        
+        assert(!labelNames.isEmpty());
+            
+        
+        gui.SetLabelName("77", "TestName");
+        
+        
+        
+        
+    }    
+    
+    
+     
      /**
       * @brief checks the probe data
       */
