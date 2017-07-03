@@ -9,6 +9,7 @@ import aqualight.databastraction.GlobalObjects;
 import aqualight.databastraction.IProbe;
 import aqualight.databastraction.PhProbe;
 import aqualight.databastraction.Probes;
+import aqualight.databastraction.TemperatureProbe;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +59,7 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         // This is the correct one:
                         //process = new ProcessBuilder("/aqualight-phcontroller", "", probe.getAddress(), "1799", "1644", "1520").start();
                         //this is for mockup testing:
-                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup").start();
+                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup","-p").start();
                         //read it to the input stream
                         is = process.getInputStream();
                         //make it to an input stream reader
@@ -86,7 +87,41 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                     } catch (IOException ex) {
                         Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                }
+                if (probe.getClass().equals(TemperatureProbe.class)) {
+                    try {
+                        //Invoke scanning of ph
+                        // This is the correct one:
+                        //process = new ProcessBuilder("/readingtemperature", probe.getAddress()).start();
+                        //this is for mockup testing:
+                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup", "-t").start();
+                        //read it to the input stream
+                        is = process.getInputStream();
+                        //make it to an input stream reader
+                        isr = new InputStreamReader(is);
+                        //Use buffered reader to have linewise reading
+                        br = new BufferedReader(isr);
+                        //Go through output line by line
+                        while ((line = br.readLine()) != null) {
+                            System.out.println(line);
+                            if (line.contains("Ph")) {
+                                //here we need to find parse the ph value
+                                result = line.replaceAll("\\D{5}$", "");
+                                result = result.replaceAll("^\\D{4}", "");
+                                //present read data
+                                ProbeDataMap.put(probe.getAddress(), result);
+                                //stop parsing
+                                break;
+                            }
+                        }
+                        //clean up
+                        br.close();
+                        is.close();
+                        isr.close();
+                        //Wait a sec
+                    } catch (IOException ex) {
+                        Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
             }
