@@ -159,6 +159,8 @@ public class PhControlController implements Initializable {
         PHControl = this;
     }
 
+    
+    
     /**
      * @brief creates a new tile for the page
      * @param label name of the label used
@@ -246,7 +248,7 @@ public class PhControlController implements Initializable {
         } catch (IOException exc) {
             System.err.println(exc);
         }
-        System.out.println("Could not determine menu title");
+        System.out.println("Could not determine menu title - "+menuTitle);
         return false;
     }
     
@@ -263,7 +265,19 @@ public class PhControlController implements Initializable {
             getLabelAddress().put(LabelIndex, address);                
         }
         WriteMapToDisk("LabelAddress", getLabelAddress());
-    }    
+    }   
+    /**
+     * @brief deletes a label
+     * @param address address
+     * @param label label
+     */
+    public void deleteLabel(String address, int label){
+        
+        getLabelAddress().remove(label);
+        getLabelNames().remove(address);
+        WriteMapToDisk("LabelAddress", getLabelAddress());
+        WriteMapToDisk("LabelNames", getLabelAddress());        
+    }
 
     
     /**

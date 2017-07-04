@@ -13,11 +13,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +29,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
@@ -57,6 +60,8 @@ public class SettingsController implements Initializable {
     public TextField labelText;
     @FXML
     public ComboBox temperatureDropDown;
+    @FXML
+    public ListView relationshipList;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -81,6 +86,7 @@ public class SettingsController implements Initializable {
             tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
             tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
 
+            ArrayList<String> temperatureList = new ArrayList<>();
             //Set up Temperature Dropdown 
             try {
                 Process process;
@@ -90,9 +96,8 @@ public class SettingsController implements Initializable {
                 String line;
                 String result;
                 double value;
-                //Invoke scanning of ph
-                // This is the correct one:
-                //process = new ProcessBuilder("/aqualight-phcontroller", "", probe.getAddress(), "1799", "1644", "1520").start();
+
+                //Invoke scanning of ph                
                 //this is for mockup testing:
                 process = new ProcessBuilder("/getOneWireTemperaturePath.sh").start();
                 //read it to the input stream
@@ -101,7 +106,7 @@ public class SettingsController implements Initializable {
                 isr = new InputStreamReader(is);
                 //Use buffered reader to have linewise reading
                 br = new BufferedReader(isr);
-                LinkedList<String> list = new LinkedList<String>();
+
                 //Go through output line by line
                 while ((line = br.readLine()) != null) {
                     System.out.println(line);
@@ -110,59 +115,60 @@ public class SettingsController implements Initializable {
                         result = line.replace("<path>", "");
                         result = result.replace("</path>", "");
                         //present read data
-                        list.add(result);
+                        temperatureList.add(result);
 
                     }
                 }
-                temperatureDropDown.setItems((ObservableList) list);
+                temperatureDropDown.setItems(FXCollections.observableList(temperatureList));
                 //clean up
                 br.close();
                 is.close();
                 isr.close();
+
                 //Wait a sec
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+                //Dummy Values
+                temperatureList.add("Test1");
+                temperatureList.add("Test2");
+                temperatureDropDown.setItems(FXCollections.observableList(temperatureList));
             }
-            
+
+            ArrayList<String> i2cList = new ArrayList<>();
+            i2cList.add("72");
+            i2cList.add("73");
+            i2cList.add("74");
+            i2cList.add("75");
+            i2cList.add("76");
+            i2cList.add("77");
+            i2cList.add("78");
+            i2cList.add("79");
             //Set up I2C DropDown
-            try {
-                
-                Process process;
-                InputStream is;
-                InputStreamReader isr;
-                BufferedReader br;
-                String line;
-                String result;
-                double value;
-                //Invoke scanning of ph
-                // This is the correct one:
-                //process = new ProcessBuilder("/aqualight-phcontroller", "", probe.getAddress(), "1799", "1644", "1520").start();
-                //this is for mockup testing:
-                process = new ProcessBuilder("i2cdetect", "-y", "1").start();
-                //read it to the input stream
-                is = process.getInputStream();
-                //make it to an input stream reader
-                isr = new InputStreamReader(is);
-                //Use buffered reader to have linewise reading
-                br = new BufferedReader(isr);
-                LinkedList<String> list = new LinkedList<String>();
-                //Go through output line by line
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
-                }
-                temperatureDropDown.setItems((ObservableList) list);
-                //clean up
-                br.close();
-                is.close();
-                isr.close();
-                //Wait a sec
-            } catch (IOException ex) {
-                Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            i2caddress.setItems(FXCollections.observableList(i2cList));
 
         } catch (SQLException ex) {
             Logger.getLogger(SettingsController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Label 1");
+        labels.add("Label 2");
+        labels.add("Label 3");
+        labels.add("Label 4");
+        labels.add("Label 5");
+        labels.add("Label 6");                    
+        labels.add("Temp 1");
+        labels.add("Temp 2");
+        labelAssignment.setItems(FXCollections.observableList(labels));
+        
+        HashMap<Integer, String> addresses = PhControlController.PHControl.getLabelAddress();
+        HashMap<String, String> names = PhControlController.PHControl.getLabelNames();         
+        LinkedList<String> relationships = new LinkedList<>();
+        
+        for(int i = 1; i < addresses.size(); i++){            
+            relationships.add(addresses.get(i)+"-"+names.get(addresses.get(i)));
+        }
+        
+        relationshipList.setItems(FXCollections.observableList(relationships));
     }
 
     /**
@@ -216,9 +222,57 @@ public class SettingsController implements Initializable {
         String address = i2caddress.getSelectionModel().getSelectedItem().toString();
         String label = labelAssignment.getSelectionModel().getSelectedItem().toString();
         String labelString = labelText.getText();
-        //AqualightPhControllerGui.setLabelsName(address, Integer.parseInt(label), labelString);
+        
+        PhControlController.PHControl.SetUpLabel(getLabelInteger(label), labelString, address);
 
+        
     }
+    /**
+     * @brief gets back the integer of the label
+     * @param label
+     * @return 
+     */
+    private int getLabelInteger(String label){
+        int intAddress = 1;
+        if(label.equals("Label 1")){
+            intAddress = 1;
+        }
+        if(label.equals("Label 2")){
+            intAddress = 2;
+        }
+        if(label.equals("Label 3")){
+            intAddress = 3;
+        }
+        if(label.equals("Label 4")){
+            intAddress = 4;
+        }
+        if(label.equals("Label 5")){
+            intAddress = 5;
+        }
+        if(label.equals("Label 6")){
+            intAddress = 6;
+        }                
+        if(label.equals("Temp 1")){
+            intAddress = 7;
+        }
+        if(label.equals("Temp 2")){
+            intAddress = 8;
+        }
+        return intAddress;
+    }
+    /**
+     * @brief if delete was clicked, delete relationship
+     * @param event 
+     */
+    @FXML 
+    private void deleteClick(ActionEvent event){
+        String foundRelation = relationshipList.getSelectionModel().getSelectedItem().toString();
+        String address = foundRelation.substring(0,1);
+        String label = foundRelation.substring(3);
+        
+        PhControlController.PHControl.deleteLabel(address, getLabelInteger(label));
+    }
+    
 
     @FXML
     private void saveTempClick(ActionEvent event) {
