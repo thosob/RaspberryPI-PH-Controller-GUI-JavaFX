@@ -119,24 +119,26 @@ public class ECProbe implements IProbe{
             //Initialize conductivity probes
             PreparedStatement statement = Connection.prepareStatement("SELECT * FROM conductivityProbe WHERE probeAddress='"+this.Address+"'");            
             ResultSet Result = statement.executeQuery();                       
-            if(Result.first()){
+            if(Result.next()){
                 statement = Connection.prepareStatement("UPDATE conductivityProbe SET "
                         + "probeAddress = '"+this.Address+"',"
                         + "lowCal = '"+this.LowCalibration+"',"
                         + "highCal = '"+this.HighCalibration+"',"
+                        + "name = '"+this.Name+"',"
                         + "temperatureID = '"+this.TemperatureID+"'"
                         + " WHERE probeAddress='"+this.Address+"'");            
-                Result = statement.executeQuery();                       
+                statement.executeUpdate();
                 
             }
             else{
                 statement = Connection.prepareStatement("INSERT INTO conductivityProbe "
-                        + "(probeAddress, lowCal, highCal, temperatureID)"
+                        + "(probeAddress, lowCal, highCal, name, temperatureID)"
                         + "VALUES ('"+this.Address+"',"
                         + "'"+this.LowCalibration+"',"
                         + "'"+this.HighCalibration+"',"
+                        + "'"+this.Name+"',"
                         + "'"+this.TemperatureID+"')");            
-                Result = statement.executeQuery();                       
+                statement.execute();
             }
             Result.close();
             Connection.close();

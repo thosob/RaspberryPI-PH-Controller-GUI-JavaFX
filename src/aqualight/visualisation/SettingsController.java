@@ -271,14 +271,13 @@ public class SettingsController implements Initializable {
             if(obj.getClass() == PhProbe.class){
                 PhProbe phProbe = (PhProbe)obj;
                 phProbe.setTemperatureID(pathToTemperatureID(temperatureProbe));
-                
+                phProbe.writeChanges();
             }
             if(obj.getClass() == ECProbe.class){
                 ECProbe ecProbe = (ECProbe)obj;            
                 ecProbe.setTemperatureID(pathToTemperatureID(temperatureProbe));
+                ecProbe.writeChanges();
             }
-            //write config
-            
         }
         catch(Exception ecv){
             System.err.println(ecv);
@@ -291,11 +290,11 @@ public class SettingsController implements Initializable {
      * @return integer of the id
      */
     private int pathToTemperatureID(String path) throws SQLException{
-          // create a connection to the database
+            // create a connection to the database
             Connection connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());                        
-            PreparedStatement statement = connection.prepareStatement("SELECT temperatureID FROM temperatureSensor WHERE path = '"+path+"'");
+            PreparedStatement statement = connection.prepareStatement("SELECT temparatureId FROM temparatureSensor WHERE path = '"+path+"'");
             ResultSet Result = statement.executeQuery();                       
-            return Result.first() ? Result.getInt(0) : 0;            
+            return Result.next() ? Result.getInt(0) : 0;            
     }
     
 

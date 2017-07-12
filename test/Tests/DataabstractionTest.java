@@ -72,9 +72,8 @@ public class DataabstractionTest {
             }            
         }
         assertTrue(tempProbe);
-        assertTrue(phProbe);
-        //This will fail anyway
-        assertFalse(ecProbe);        
+        assertTrue(phProbe);        
+        assertTrue(ecProbe);        
     }
     /**
      * @brief tests saving probe settings 
@@ -121,7 +120,7 @@ public class DataabstractionTest {
         
         
         //Works: Checked every time data is loaded new
-        probes = new Probes();
+        probes = new Probes();        
         //Checks if everything worked fine
         assertTrue(probes.getProbe(ecAddress).getName().equals("TestUnit"));
         assertTrue(probes.getProbe(phAddress).getName().equals("TestUnit"));

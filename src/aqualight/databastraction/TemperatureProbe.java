@@ -107,24 +107,24 @@ public class TemperatureProbe implements IProbe {
             Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
             System.out.println(GlobalObjects.getDatabaseFile().isFile());
             //Initialize conductivity probes
-            PreparedStatement statement = Connection.prepareStatement("SELECT * FROM temperatureSensor WHERE temperatureID='"+this.Address+"'");            
+            PreparedStatement statement = Connection.prepareStatement("SELECT * FROM temparatureSensor WHERE temparatureId='"+this.TemperatureID+"'");            
             ResultSet Result = statement.executeQuery();                       
-            if(Result.first()){
-                statement = Connection.prepareStatement("UPDATE temperatureSensor SET "
-                        + "temperatureID = '"+this.Address+"',"
+            if(Result.next()){
+                statement = Connection.prepareStatement("UPDATE temparatureSensor SET "
+                        + "temparatureId = '"+this.TemperatureID+"',"
                         + "path = '"+this.Path+"',"
-                        + "name = '"+this.Name+"',"                      
-                        + " WHERE address='"+this.Address+"'");            
-                Result = statement.executeQuery();                       
+                        + "name = '"+this.Name+"'"                      
+                        + " WHERE temparatureId='"+this.TemperatureID+"'");            
+                statement.executeUpdate();                   
                 
             }
             else{
-                statement = Connection.prepareStatement("INSERT INTO temperatureSensor "
-                        + "(temperatureID, path, name)"
+                statement = Connection.prepareStatement("INSERT INTO temparatureSensor "
+                        + "(temparatureId, path, name)"
                         + "VALUES ('"+this.Address+"',"
                         + "'"+this.Path+"',"
                         + "'"+this.Name+"')");            
-                Result = statement.executeQuery();                       
+                statement.execute();                       
             }
             Result.close();
             Connection.close();

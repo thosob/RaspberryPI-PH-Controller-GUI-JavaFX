@@ -118,26 +118,28 @@ public class PhProbe implements IProbe {
             //Initialize conductivity probes
             PreparedStatement statement = Connection.prepareStatement("SELECT * FROM phProbe WHERE address='"+this.Address+"'");            
             ResultSet Result = statement.executeQuery();                       
-            if(Result.first()){
+            if(Result.next()){
                 statement = Connection.prepareStatement("UPDATE phProbe SET "
                         + "address = '"+this.Address+"',"
                         + "ph4 = '"+this.Ph4+"',"
                         + "ph7 = '"+this.Ph7+"',"
                         + "ph9 = '"+this.Ph9+"',"
+                        + "name = '"+this.Name+"',"
                         + "temperatureID = '"+this.TemperatureID+"'"
                         + " WHERE address='"+this.Address+"'");            
-                Result = statement.executeQuery();                       
+                statement.executeUpdate();                     
                 
             }
             else{
                 statement = Connection.prepareStatement("INSERT INTO phProbe "
-                        + "(address, ph4, ph7, ph9, temperatureID)"
+                        + "(address, ph4, ph7, ph9, temperatureID, name)"
                         + "VALUES ('"+this.Address+"',"
                         + "'"+this.Ph4+"',"
                         + "'"+this.Ph7+"',"
                         + "'"+this.Ph9+"',"
-                        + "'"+this.TemperatureID+"')");            
-                Result = statement.executeQuery();                       
+                        + "'"+this.TemperatureID+"',"
+                        + "'"+this.Name+"')");            
+                statement.execute();                  
             }
             Result.close();
             Connection.close();
