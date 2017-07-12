@@ -46,15 +46,11 @@ public class PhControlController implements Initializable {
      *  are the keys for the labels.
      */    
     private LinkedList<LabelContainer> LabelContainer = new LinkedList<>();
-    
-    /**
-     * @brief contains address as key and position of label in array
-     */
-    private HashMap<Integer, String> LabelAddress = new HashMap<>();    
+          
     /**
      * @brief contains address as key and name
      */
-    private HashMap<String, String> LabelNames = new HashMap<>();
+    private HashMap<Integer, String> LabelNames = new HashMap<>();
  
         
     
@@ -131,30 +127,29 @@ public class PhControlController implements Initializable {
         loadValuesIntoGUI();             
         
         //Adding all labels to our label container
-        LabelContainer lc1 = new LabelContainer(1, p1Name, p1, getLabelAddress().get(1));                                
-        String tmpAddress = getLabelAddress().get(1);
-        p1Name.setText(LabelNames.get(tmpAddress));
+        LabelContainer lc1 = new LabelContainer(0, p1Name, p1, "78");                                        
+        p1Name.setText(LabelNames.get(0));
         LabelContainer.add(lc1);
-        LabelContainer lc2 = new LabelContainer(2,  p2Name, p2,getLabelAddress().get(2));                                
-        p2Name.setText(getLabelNames().get((getLabelAddress().get(2))));
+        LabelContainer lc2 = new LabelContainer(1,  p2Name, p2,"79");                                
+        p2Name.setText(getLabelNames().get((1)));
         LabelContainer.add(lc2);
-        LabelContainer lc3 = new LabelContainer(3,  p3Name, p3,getLabelAddress().get(3));      
-        p3Name.setText(getLabelNames().get((getLabelAddress().get(3))));
+        LabelContainer lc3 = new LabelContainer(2,  p3Name, p3,"73");      
+        p3Name.setText(getLabelNames().get(2));
         LabelContainer.add(lc3);
-        LabelContainer lc4 = new LabelContainer(4,  p4Name,p4, getLabelAddress().get(4));                                
-        p4Name.setText(getLabelNames().get((getLabelAddress().get(4))));
+        LabelContainer lc4 = new LabelContainer(3,  p4Name,p4, "74");                                
+        p4Name.setText(getLabelNames().get(3));
         LabelContainer.add(lc4);
-        LabelContainer lc5 = new LabelContainer(5, p5Name,p5,  getLabelAddress().get(5));    
-        p5Name.setText(getLabelNames().get((getLabelAddress().get(5))));
+        LabelContainer lc5 = new LabelContainer(4, p5Name,p5,  "76");    
+        p5Name.setText(getLabelNames().get(4));
         LabelContainer.add(lc5);
-        LabelContainer lc6 = new LabelContainer(6,  p6Name,p6, getLabelAddress().get(6));      
-        p6Name.setText(getLabelNames().get((getLabelAddress().get(6))));
+        LabelContainer lc6 = new LabelContainer(5,  p6Name,p6, "77");      
+        p6Name.setText(getLabelNames().get(5));
         LabelContainer.add(lc6);        
-        LabelContainer lc7 = new LabelContainer(7,  temp1, t1,getLabelAddress().get(7)); 
-        temp1.setText(getLabelNames().get((getLabelAddress().get(7))));
+        LabelContainer lc7 = new LabelContainer(6,  temp1, t1,"/sys/bus/w1/devices/28-05169046aaff/w1_slave"); 
+        temp1.setText(getLabelNames().get(6));
         LabelContainer.add(lc7);
-        LabelContainer lc8 = new LabelContainer(8,  temp2, t2,getLabelAddress().get(8));    
-        temp2.setText(getLabelNames().get((getLabelAddress().get(8))));
+        LabelContainer lc8 = new LabelContainer(7,  temp2, t2,"/sys/bus/w1/devices/28-051690467fff/w1_slave");    
+        temp2.setText(getLabelNames().get(7));
         LabelContainer.add(lc8);
         PHControl = this;
     }
@@ -253,45 +248,24 @@ public class PhControlController implements Initializable {
     }
     
     /**
-     * @param LabelIndex
-     * @param labelName  name of the label             
-     * @brief Sets up label for probe
-     * @param address of the probe     
-     */
-    public void SetUpLabel(int LabelIndex, String labelName, String address) {
-                
-        //Update key value of the map
-        if (address != null & labelName != null) {                                   
-            getLabelAddress().put(LabelIndex, address);                
-        }
-        WriteMapToDisk("LabelAddress", getLabelAddress());
-    }   
-    /**
-     * @brief deletes a label
-     * @param address address
-     * @param label label
-     */
-    public void deleteLabel(String address, int label){
-        
-        getLabelAddress().remove(label);
-        getLabelNames().remove(address);
-        WriteMapToDisk("LabelAddress", getLabelAddress());
-        WriteMapToDisk("LabelNames", getLabelAddress());        
-    }
-
-    
-    /**
+     * @param label
      * @param name sets up the name of the label
      * @brief gets the name of the label
-     * @param address sets up the address of the label
      */
-    public void SetLabelName(String address, String name){
+    public void SetLabelName(int label, String name){
         for(LabelContainer l : LabelContainer){
-            if(l.getAddress().equals(address)){
+            if(l.getIndex() == label){
                 l.getNameLabel().setText(name);
             }
         } 
-        WriteMapToDisk("LabelNames", getLabelAddress());
+        HashMap<Integer, String> labelNames = getLabelNames();
+        if(labelNames.containsKey(label)){
+            labelNames.replace(label, name);
+        }
+        else{
+            labelNames.put(label, name);
+        }
+        WriteMapToDisk("LabelNames", labelNames);
     }
     
     /**
@@ -308,8 +282,8 @@ public class PhControlController implements Initializable {
         
 
     /**
-     * @brief loads values into the gui from sqlite database
-     */
+    * @brief loads values into the gui from sqlite database
+    */
     private void loadValuesIntoGUI() {
         
         ControlValueDispatcher dis = new ControlValueDispatcher();
@@ -321,37 +295,25 @@ public class PhControlController implements Initializable {
         dis.addObserver(listener);
         int observers = dis.countObservers();
         dis.hasChanged();
-    }
-    
-     /**
-     * @return the LabelAddress
-     */
-    public HashMap<Integer, String> getLabelAddress() {
-        if(LabelAddress.size() == 0){
-            this.LabelAddress = LoadMapFromDisk("LabelAddress", this.LabelAddress);
-        }
-        return this.LabelAddress;
-    }
+    }        
 
     /**
-     * @return the LabelNames
-     */
-    public HashMap<String, String> getLabelNames() {
+    * @return the LabelNames
+    */
+    public HashMap<Integer, String> getLabelNames() {
         if(LabelNames.size() == 0){
             this.LabelNames = LoadMapFromDisk("LabelNames", this.LabelNames);
         }
         return this.LabelNames;
     }
     
-      /**
-     * @brief initialize all global gui objects, scene has to be load fully
-     * @param scene contains fully load scene      
-     **/
+    /**
+    * @brief initialize all global gui objects, scene has to be load fully
+    * @param scene contains fully load scene      
+    **/
     public void initializeGlobalGUIObjects(Scene scene){
-        //load assingments from disk
-        LabelAddress = LoadMapFromDisk("LabelAddress", getLabelAddress());
+        //load assingments from disk        
         LabelNames = LoadMapFromDisk("LabelNames", getLabelNames());
        
     }
-
 }

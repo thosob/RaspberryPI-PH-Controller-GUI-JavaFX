@@ -123,6 +123,41 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if (probe.getClass().equals(TemperatureProbe.class)) {
+                    try {
+                        //Invoke scanning of ph
+                        // This is the correct one:
+                        //process = new ProcessBuilder("n/readingtemperature", probe.getAddress()).start();
+                        //this is for mockup testing:
+                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup", "-c").start();
+                        //read it to the input stream
+                        is = process.getInputStream();
+                        //make it to an input stream reader
+                        isr = new InputStreamReader(is);
+                        //Use buffered reader to have linewise reading
+                        br = new BufferedReader(isr);
+                        //Go through output line by line
+                        while ((line = br.readLine()) != null) {
+                            System.out.println(line);
+                            if (line.contains("Ph")) {
+                                //here we need to find parse the ph value
+                                result = line.replaceAll("\\D{5}$", "");
+                                result = result.replaceAll("^\\D{4}", "");
+                                //present read data
+                                ProbeDataMap.put(probe.getAddress(), result);
+                                //stop parsing
+                                break;
+                            }
+                        }
+                        //clean up
+                        br.close();
+                        is.close();
+                        isr.close();
+                        //Wait a sec
+                    } catch (IOException ex) {
+                        Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
 
             }
             setChanged();

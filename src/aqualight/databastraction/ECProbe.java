@@ -5,6 +5,12 @@
  */
 package aqualight.databastraction;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -96,4 +102,49 @@ public class ECProbe implements IProbe{
     public boolean hasValues() {
         return !Data.isEmpty();
     }
+    /**
+     * @brief writes back changes on ec-probe
+     * @return 
+     */
+    @Override
+    public boolean writeChanges() {
+          
+        Connection Connection;                
+        
+        try {
+
+            // create a connection to the database
+            Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
+            System.out.println(GlobalObjects.getDatabaseFile().isFile());
+            //Initialize conductivity probes
+            PreparedStatement statement = Connection.prepareStatement("SELECT * FROM conductivityProbe WHERE probeAddress='"+this.Address+"'");            
+            ResultSet Result = statement.executeQuery();                       
+            if(Result.first()){
+                statement = Connection.prepareStatement("UPDATE conductivityProbe SET "
+                        + "probeAddress = '"+this.Address+"',"
+                        + "lowCal = '"+this.LowCalibration+"',"
+                        + "highCal = '"+this.HighCalibration+"',"
+                        + "temperatureID = '"+this.TemperatureID+"'"
+                        + " WHERE probeAddress='"+this.Address+"'");            
+                Result = statement.executeQuery();                       
+                
+            }
+            else{
+                statement = Connection.prepareStatement("INSERT INTO conductivityProbe "
+                        + "(probeAddress, lowCal, highCal, temperatureID)"
+                        + "VALUES ('"+this.Address+"',"
+                        + "'"+this.LowCalibration+"',"
+                        + "'"+this.HighCalibration+"',"
+                        + "'"+this.TemperatureID+"')");            
+                Result = statement.executeQuery();                       
+            }
+            Result.close();
+            Connection.close();
+        }
+        catch(SQLException sqlexc){
+            System.err.println(sqlexc);
+            return false;
+        }
+        return true;
+    }    
 }

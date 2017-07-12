@@ -5,17 +5,21 @@
  */
 package aqualight.visualisation;
 
+import aqualight.databastraction.ECProbe;
 import aqualight.databastraction.GlobalObjects;
+import aqualight.databastraction.PhProbe;
+import aqualight.databastraction.Probes;
 import aqualight.dataprocessing.ControlValueDispatcher;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,8 +64,7 @@ public class SettingsController implements Initializable {
     public TextField labelText;
     @FXML
     public ComboBox temperatureDropDown;
-    @FXML
-    public ListView relationshipList;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -158,19 +161,10 @@ public class SettingsController implements Initializable {
         labels.add("Label 6");                    
         labels.add("Temp 1");
         labels.add("Temp 2");
-        labelAssignment.setItems(FXCollections.observableList(labels));
+        labelAssignment.setItems(FXCollections.observableList(labels));        
         
-        HashMap<Integer, String> addresses = PhControlController.PHControl.getLabelAddress();
-        HashMap<String, String> names = PhControlController.PHControl.getLabelNames();         
-        LinkedList<String> relationships = new LinkedList<>();
-        
-        for(int i = 1; i < addresses.size(); i++){            
-            relationships.add(addresses.get(i)+"-"+names.get(addresses.get(i)));
-        }
-        
-        relationshipList.setItems(FXCollections.observableList(relationships));
+       
     }
-
     /**
      * @brief creates a new tile for the page
      * @param label name of the label used
@@ -218,12 +212,12 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
-    private void addClick(ActionEvent event) {
-        String address = i2caddress.getSelectionModel().getSelectedItem().toString();
-        String label = labelAssignment.getSelectionModel().getSelectedItem().toString();
+    private void addClick(ActionEvent event) {        
+        int label = getLabelInteger(labelAssignment.getSelectionModel().getSelectedItem().toString());
         String labelString = labelText.getText();
         
-        PhControlController.PHControl.SetUpLabel(getLabelInteger(label), labelString, address);
+        
+        PhControlController.PHControl.SetLabelName(label, labelString);
 
         
     }
@@ -233,51 +227,77 @@ public class SettingsController implements Initializable {
      * @return 
      */
     private int getLabelInteger(String label){
-        int intAddress = 1;
+        int intAddress = 0;
         if(label.equals("Label 1")){
-            intAddress = 1;
+            intAddress = 0;
         }
         if(label.equals("Label 2")){
-            intAddress = 2;
+            intAddress = 1;
         }
         if(label.equals("Label 3")){
-            intAddress = 3;
+            intAddress = 2;
         }
         if(label.equals("Label 4")){
-            intAddress = 4;
+            intAddress = 3;
         }
         if(label.equals("Label 5")){
-            intAddress = 5;
+            intAddress = 4;
         }
         if(label.equals("Label 6")){
-            intAddress = 6;
+            intAddress = 5;
         }                
         if(label.equals("Temp 1")){
-            intAddress = 7;
+            intAddress = 6;
         }
         if(label.equals("Temp 2")){
-            intAddress = 8;
+            intAddress = 7;
         }
         return intAddress;
     }
+    
     /**
-     * @brief if delete was clicked, delete relationship
+     * @brief save temperature assignment click function
      * @param event 
      */
-    @FXML 
-    private void deleteClick(ActionEvent event){
-        String foundRelation = relationshipList.getSelectionModel().getSelectedItem().toString();
-        String address = foundRelation.substring(0,1);
-        String label = foundRelation.substring(3);
-        
-        PhControlController.PHControl.deleteLabel(address, getLabelInteger(label));
-    }
-    
-
     @FXML
     private void saveTempClick(ActionEvent event) {
-
+        String probeAddress = i2caddress.getSelectionModel().getSelectedItem().toString();
+        String temperatureProbe = temperatureDropDown.getSelectionModel().getSelectedItem().toString();
+        
+        Probes probes =  GlobalObjects.getProbes();
+        Object obj = probes.getProbe(probeAddress);
+        try{
+            //Change in running program
+            if(obj.getClass() == PhProbe.class){
+                PhProbe phProbe = (PhProbe)obj;
+                phProbe.setTemperatureID(pathToTemperatureID(temperatureProbe));
+                
+            }
+            if(obj.getClass() == ECProbe.class){
+                ECProbe ecProbe = (ECProbe)obj;            
+                ecProbe.setTemperatureID(pathToTemperatureID(temperatureProbe));
+            }
+            //write config
+            
+        }
+        catch(Exception ecv){
+            System.err.println(ecv);
+        }
+        
     }
+    /**
+     * @brief gets temperature id from db
+     * @param path path to temperature id
+     * @return integer of the id
+     */
+    private int pathToTemperatureID(String path) throws SQLException{
+          // create a connection to the database
+            Connection connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());                        
+            PreparedStatement statement = connection.prepareStatement("SELECT temperatureID FROM temperatureSensor WHERE path = '"+path+"'");
+            ResultSet Result = statement.executeQuery();                       
+            return Result.first() ? Result.getInt(0) : 0;            
+    }
+    
 
     /**
      * @brief changes the screen to what the menu reads
@@ -324,10 +344,10 @@ public class SettingsController implements Initializable {
                 System.out.println(menuTitle);
                 return true;
             }
-        } catch (IOException exc) {
+        } catch (Exception exc) {
             System.err.println(exc);
         }
-        System.out.println("Could not determine menu title");
+        System.out.println("Could not determine menu title - "+menuTitle );
         return false;
     }
 

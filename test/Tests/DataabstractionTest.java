@@ -76,4 +76,63 @@ public class DataabstractionTest {
         //This will fail anyway
         assertFalse(ecProbe);        
     }
+    /**
+     * @brief tests saving probe settings 
+     */
+    @Test
+    public void testSaveProbeSettings(){                
+        Probes probes = new Probes();
+        IProbe[] array = probes.getProbes();
+        TemperatureProbe temp = null;
+        ECProbe ec = null;
+        PhProbe ph = null;
+        
+        
+        //find at least one probe of each type to test settings out
+        for (IProbe item : array) {
+            if (item.getClass().equals(TemperatureProbe.class)) {
+                temp = (TemperatureProbe)item;
+                
+            }
+            if (item.getClass().equals(ECProbe.class)) {
+                ec = (ECProbe)item;
+            }
+            if (item.getClass().equals(PhProbe.class)) {
+                ph = (PhProbe)item;                                
+            }            
+        }
+        assert(temp != null);
+        assert(ec != null);
+        assert(ph != null);
+        String ecName = ec.getName();
+        String phName = ph.getName();
+        String tempName = temp.getName();
+        String ecAddress = ec.getAddress();
+        String phAddress = ph.getAddress();
+        String tempAddress = temp.getAddress();
+                       
+        ec.setName("TestUnit");
+        ph.setName("TestUnit");
+        temp.setName("TestUnit");
+        
+        assertTrue(ec.writeChanges());
+        assertTrue(ph.writeChanges());
+        assertTrue(temp.writeChanges());
+        
+        
+        //Works: Checked every time data is loaded new
+        probes = new Probes();
+        //Checks if everything worked fine
+        assertTrue(probes.getProbe(ecAddress).getName().equals("TestUnit"));
+        assertTrue(probes.getProbe(phAddress).getName().equals("TestUnit"));
+        assertTrue(probes.getProbe(tempAddress).getName().equals("TestUnit"));
+        //Set back data
+        ec.setName(ecName);
+        ph.setName(phName);
+        temp.setName(tempName);        
+        assertTrue(ec.writeChanges());
+        
+        
+        
+    }
 }

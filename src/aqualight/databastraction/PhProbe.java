@@ -5,6 +5,11 @@
  */
 package aqualight.databastraction;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -98,6 +103,50 @@ public class PhProbe implements IProbe {
     @Override
     public boolean hasValues() {
         return !Data.isEmpty();
+    }
+
+    @Override
+    public boolean writeChanges() {
+              
+        Connection Connection;                
+        
+        try {
+
+            // create a connection to the database
+            Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
+            System.out.println(GlobalObjects.getDatabaseFile().isFile());
+            //Initialize conductivity probes
+            PreparedStatement statement = Connection.prepareStatement("SELECT * FROM phProbe WHERE address='"+this.Address+"'");            
+            ResultSet Result = statement.executeQuery();                       
+            if(Result.first()){
+                statement = Connection.prepareStatement("UPDATE phProbe SET "
+                        + "address = '"+this.Address+"',"
+                        + "ph4 = '"+this.Ph4+"',"
+                        + "ph7 = '"+this.Ph7+"',"
+                        + "ph9 = '"+this.Ph9+"',"
+                        + "temperatureID = '"+this.TemperatureID+"'"
+                        + " WHERE address='"+this.Address+"'");            
+                Result = statement.executeQuery();                       
+                
+            }
+            else{
+                statement = Connection.prepareStatement("INSERT INTO phProbe "
+                        + "(address, ph4, ph7, ph9, temperatureID)"
+                        + "VALUES ('"+this.Address+"',"
+                        + "'"+this.Ph4+"',"
+                        + "'"+this.Ph7+"',"
+                        + "'"+this.Ph9+"',"
+                        + "'"+this.TemperatureID+"')");            
+                Result = statement.executeQuery();                       
+            }
+            Result.close();
+            Connection.close();
+        }
+        catch(SQLException sqlexc){
+            System.err.println(sqlexc);
+            return false;
+        }
+        return true;
     }
     
 }

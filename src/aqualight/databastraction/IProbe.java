@@ -58,6 +58,10 @@ public interface IProbe {
     public IProbeData getLastValue();
 
     public boolean hasValues();
-    
+    /**
+     * @brief writes the probe changes to the database
+     * @return 
+     */
+    public boolean writeChanges();
     
 }

@@ -46,21 +46,6 @@ public class Probes {
                 list.add(probe);
             }
             
-            //Initialize ph probes
-            statement = Connection.prepareStatement("SELECT * FROM conductivityProbe");
-            Result = statement.executeQuery();
-            
-            //Go through all data and add it to the list
-            while (Result.next()) {
-                PhProbe probe = new PhProbe();
-                probe.setAddress(Result.getString(1));                                
-                probe.setPh4(Result.getInt(2));
-                probe.setPh7(Result.getInt(3));
-                probe.setPh9(Result.getInt(4));
-                probe.setTemperatureID(Result.getInt(5));
-                probe.setName(Result.getString(6));  
-                list.add(probe);
-            }
             
             //Initialize ph probes
             statement = Connection.prepareStatement("SELECT * FROM phProbe");
