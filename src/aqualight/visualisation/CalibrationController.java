@@ -5,11 +5,17 @@
  */
 package aqualight.visualisation;
 
+import aqualight.databastraction.GlobalObjects;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -39,8 +45,8 @@ import javafx.scene.text.Text;
  */
 public class CalibrationController implements Initializable {
 
-    private final String ecProgram = "";
-    private final String phProgram = "";
+    private final String ecProgram = GlobalObjects.getEcProgramCalib();
+    private final String phProgram = GlobalObjects.getPhProgramCalib();
     
 
     @FXML
@@ -206,13 +212,24 @@ public class CalibrationController implements Initializable {
             probeType = "ec";
             Address = ecDropdown.getSelectionModel().selectedItemProperty().getName();
         }
+        
         if(Address != null){
         
             if(probeType.equals("ph") && !Address.equals("")){
-                executeCalibration(phProgram, Address, Value);
+                if(executeCalibration(phProgram, Address, Value)){
+                    System.out.println("Success");
+                }
+                else{
+                    System.out.println("Failure");
+                }
             }
             if(probeType.equals("ec") && !Address.equals("")){
-                executeCalibration(ecProgram, Address, Value);           
+                if(executeCalibration(ecProgram, Address, Value)){
+                    System.out.println("Success");
+                }
+                else{
+                    System.out.println("Failure");
+                }
             }
         }                        
     }
@@ -244,4 +261,64 @@ public class CalibrationController implements Initializable {
         }
         return false;
     }
+    /**
+     * @brief saves the calibration into sqlite database
+     * @param Address which is used
+     * @param Value ph4 / ph7 / ph9 ...
+     * @param Result result from the mc
+     * @return true if no exception was thrown
+     */
+    private boolean saveCalibration(String address, String value, String output, String probe) throws SQLException{
+        
+        PreparedStatement statement = null;
+        Connection connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
+        //check out which probe type
+        if(probe.equals("ph")){
+            statement = connection.prepareStatement("SELECT * FROM phProbe WHERE address = '"+address+"'");
+        }
+        if(probe.equals("ec")){
+            statement = connection.prepareStatement("SELECT * FROM conductivityProbe WHERE probeAddress='"+address+"'");
+        }           
+        
+        ResultSet Result = statement.executeQuery();   
+        
+        if(Result.next()){
+            if(probe.equals("ph")){
+                statement = connection.prepareStatement("UPDATE phProbe SET "
+                        + value +" = '"+output+"'"                        
+                        + " WHERE address='"+address+"'");            
+             
+            }
+            else{
+                statement = connection.prepareStatement("UPDATE conductivityProbe SET "
+                        + value +" = '"+output+"'"                        
+                        + " WHERE probeAddress='"+address+"'");            
+            }
+            statement.executeUpdate();                   
+        }
+        else{
+            if(probe.equals("ph")){
+                statement = connection.prepareStatement("INSERT INTO phProbe "
+                        + "(address, "+value+", temperatureID)"
+                        + "VALUES ('"+address+"',"
+                        + "'"+output+"',"
+                        + "'"+probe+"')");            
+                statement.execute();                       
+            }
+            else{
+                statement = connection.prepareStatement("INSERT INTO conductivityProbe "
+                        + "(probeAddress, "+value+", temperatureID)"
+                        + "VALUES ('"+address+"',"
+                        + "'"+output+"',"
+                        + "'"+probe+"')");            
+                statement.execute();
+            }
+        }
+        
+        Result.close();
+        connection.close();
+        
+        return true;
+    }
+    
 }
