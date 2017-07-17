@@ -24,6 +24,10 @@ public class GlobalObjects {
     private final static File Database = new File("resources/symbiofilter.db");       
     private static String ServerName;
     private static String DeviceName;
+    private final static String PhProgramCalib = "/aqualight-phcontroller-calibrator";
+    private final static String EcProgramCalib = "/aqualight-conductivity-calibrator";
+    private final static String PhProgram = "/aqualight-phcontroller";
+    private final static String EcProgram = "/aqualight-conductivity";
     
     /**
      * @brief initializes all global objects - useful for unit-tests
@@ -158,6 +162,34 @@ public class GlobalObjects {
                 System.out.println(ex.getMessage());
             }
         }
+    }
+
+    /**
+     * @return the PhProgramCalib
+     */
+    public static String getPhProgramCalib() {
+        return PhProgramCalib;
+    }
+
+    /**
+     * @return the EcProgramCalib
+     */
+    public static String getEcProgramCalib() {
+        return EcProgramCalib;
+    }
+
+    /**
+     * @return the PhProgram
+     */
+    public static String getPhProgram() {
+        return PhProgram;
+    }
+
+    /**
+     * @return the EcProgram
+     */
+    public static String getEcProgram() {
+        return EcProgram;
     }
     
    

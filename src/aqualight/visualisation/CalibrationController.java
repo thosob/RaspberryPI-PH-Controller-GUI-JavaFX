@@ -10,14 +10,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
@@ -34,10 +39,16 @@ import javafx.scene.text.Text;
  */
 public class CalibrationController implements Initializable {
 
-
+    private final String ecProgram = "";
+    private final String phProgram = "";
+    
 
     @FXML
     private TilePane tilePane;
+    @FXML
+    private ComboBox phDropdown;
+    @FXML
+    private ComboBox ecDropdown;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -52,7 +63,19 @@ public class CalibrationController implements Initializable {
         tilePane.getChildren().add(createTile("Eichen", Color.DIMGREY));
         tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
         tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
-
+        
+        ArrayList<String> phDropdownlist = new ArrayList<>();
+        phDropdownlist.add("77 - "+PhControlController.PHControl.getLabelNamesByAddress(77));
+        phDropdownlist.add("78 - "+PhControlController.PHControl.getLabelNamesByAddress(78));
+        phDropdownlist.add("79 - "+PhControlController.PHControl.getLabelNamesByAddress(79));                    
+        phDropdown.setItems(FXCollections.observableList(phDropdownlist));
+        
+        ArrayList<String> ecDropdownlist = new ArrayList<>();
+        ecDropdownlist.add("73 - "+PhControlController.PHControl.getLabelNamesByAddress(73));
+        ecDropdownlist.add("74 - "+PhControlController.PHControl.getLabelNamesByAddress(74));
+        ecDropdown.setItems(FXCollections.observableList(ecDropdownlist));
+        
+        
     }
 
     /**
@@ -61,7 +84,7 @@ public class CalibrationController implements Initializable {
      * @param color color that the tile will have
      * @return stackpane as a tile
      */
-    private StackPane createTile(String label, Color color) {
+    private StackPane createTile(String label, Color color)  {
         Rectangle r = new Rectangle();
         r.styleProperty().set("-fx-background-color: aqua");
         r.widthProperty().set(95);
@@ -145,6 +168,55 @@ public class CalibrationController implements Initializable {
         System.out.println("Could not determine menu title");
         return false;
     }
+    /**
+     * @brief if an action value was clicked
+     * @param event 
+     */
+    @FXML
+    public void clickCalibration(ActionEvent event){
+        String label = ((Button)event.getSource()).getId();
+        event.consume();
+        String probeType = "";
+        String Address = "";
+        String Value = "";
+        
+        
+        if(label.equals("ph4")){
+            Value = "4";
+            probeType = "ph";
+            Address = phDropdown.getSelectionModel().selectedItemProperty().getName();
+        }
+        if(label.equals("ph7")){
+            Value = "7";
+            probeType = "ph";
+            Address = phDropdown.getSelectionModel().selectedItemProperty().getName();
+        }
+        if(label.equals("ph9")){
+            Value = "9";
+            probeType = "ph";
+            Address = phDropdown.getSelectionModel().selectedItemProperty().getName();
+        }
+        if(label.equals("ecLow")){
+            Value = "76";
+            probeType = "ec";
+            Address = ecDropdown.getSelectionModel().selectedItemProperty().getName();
+        }
+        if(label.equals("ecHigh")){
+            Value = "1278";
+            probeType = "ec";
+            Address = ecDropdown.getSelectionModel().selectedItemProperty().getName();
+        }
+        if(Address != null){
+        
+            if(probeType.equals("ph") && !Address.equals("")){
+                executeCalibration(phProgram, Address, Value);
+            }
+            if(probeType.equals("ec") && !Address.equals("")){
+                executeCalibration(ecProgram, Address, Value);           
+            }
+        }                        
+    }
+    
     
     /**
      * @param pathToProgram addresses the path to the program e.g. "/aqualight-phcontroller-calibrator"
@@ -172,5 +244,4 @@ public class CalibrationController implements Initializable {
         }
         return false;
     }
-
 }

@@ -301,10 +301,28 @@ public class PhControlController implements Initializable {
     * @return the LabelNames
     */
     public HashMap<Integer, String> getLabelNames() {
-        if(LabelNames.size() == 0){
+        if(LabelNames.isEmpty()){
             this.LabelNames = LoadMapFromDisk("LabelNames", this.LabelNames);
         }
         return this.LabelNames;
+    }
+    
+    /**
+    * @param i as integer
+    * @return the Name of the Label
+    */
+    public String getLabelNamesByAddress(int i) {        
+        String address;
+        String iString = Integer.toString(i);
+        String res = null;
+        
+        for(LabelContainer lc : this.LabelContainer){
+            address = lc.getAddress();
+            if(address.equals(iString)){
+                res = lc.getNameLabel().getText();
+            }
+        }
+        return res; 
     }
     
     /**
