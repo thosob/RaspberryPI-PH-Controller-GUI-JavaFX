@@ -55,9 +55,10 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                 //Check if ph probe
                 if (probe.getClass().equals(PhProbe.class)) {
                     try {
+                        PhProbe phprobe = (PhProbe)probe;
                         //Invoke scanning of ph
                         // This is the correct one:
-                        //process = new ProcessBuilder("/aqualight-phcontroller", "", probe.getAddress(), "1799", "1644", "1520").start();
+//                        process = new ProcessBuilder("/aqualight-phcontroller", "", probe.getAddress(), String.valueOf(phprobe.getPh4()), String.valueOf(phprobe.getPh7()), String.valueOf(phprobe.getPh9())).start();
                         //this is for mockup testing:
                         process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup","-p").start();
                         //read it to the input stream

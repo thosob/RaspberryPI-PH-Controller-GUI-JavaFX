@@ -28,6 +28,8 @@ public class GlobalObjects {
     private final static String EcProgramCalib = "/aqualight-conductivity-calibrator";
     private final static String PhProgram = "/aqualight-phcontroller";
     private final static String EcProgram = "/aqualight-conductivity";
+    private final static String TestProgramPH = "";
+    private final static String TestProgramEC = "";
     
     /**
      * @brief initializes all global objects - useful for unit-tests

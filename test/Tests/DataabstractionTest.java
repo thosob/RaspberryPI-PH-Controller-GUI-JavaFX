@@ -11,6 +11,8 @@ import aqualight.databastraction.IProbe;
 import aqualight.databastraction.PhProbe;
 import aqualight.databastraction.Probes;
 import aqualight.databastraction.TemperatureProbe;
+import aqualight.visualisation.CalibrationController;
+import java.sql.SQLException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -134,4 +136,29 @@ public class DataabstractionTest {
         
         
     }
+    
+    @Test
+    public void testSaveCalibration() throws SQLException{
+        Probes probes = new Probes();
+        IProbe[] array = probes.getProbes();        
+        assert(array.length > 0);
+        
+        ECProbe ecProbe = null;
+        PhProbe phProbe = null;
+        TemperatureProbe tempProbe = null;
+        
+        for (IProbe array1 : array) {
+            if (array1.getClass().equals(TemperatureProbe.class)) {
+                tempProbe = (TemperatureProbe)array1;
+            }
+            if (array1.getClass().equals(ECProbe.class)) {
+                ecProbe = (ECProbe)array1;
+            }
+            if (array1.getClass().equals(PhProbe.class)) {
+                phProbe = (PhProbe)array1;
+            }            
+        }
+        assertTrue(phProbe.saveCalibration("ph4", "1798"));
+        assertTrue(ecProbe.saveCalibration("lowCal","77"));                                
+    }        
 }

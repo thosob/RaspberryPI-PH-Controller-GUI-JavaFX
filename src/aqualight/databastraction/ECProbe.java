@@ -10,8 +10,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @brief Describes EC-Probe
@@ -149,4 +150,34 @@ public class ECProbe implements IProbe{
         }
         return true;
     }    
+
+    @Override
+    public boolean saveCalibration(String value, String output) {   
+        
+        try {
+            PreparedStatement statement = null;
+            Connection connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());
+            statement = connection.prepareStatement("SELECT * FROM conductivityProbe WHERE probeAddress='"+this.Address+"'");                                    
+            ResultSet Result = statement.executeQuery();
+            
+            if(Result.next()){                                    
+                statement = connection.prepareStatement("UPDATE conductivityProbe SET "+ value +" = '"+output+"'" + " WHERE probeAddress='"+this.Address+"'");
+                statement.executeUpdate();
+            }
+            else{            
+                statement = connection.prepareStatement("INSERT INTO conductivityProbe "
+                        + "(probeAddress, "+value+", temperatureID)"
+                        + "VALUES ('"+this.Address+"',"
+                        + "'"+output+"','"
+                        + this.TemperatureID+"')");            
+                statement.execute();
+            }                       
+            Result.close();
+            connection.close();                        
+        } catch (SQLException ex) {
+            Logger.getLogger(ECProbe.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }        
+        return true;
+    }
 }

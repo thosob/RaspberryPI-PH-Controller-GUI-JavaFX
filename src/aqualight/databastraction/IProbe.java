@@ -64,4 +64,6 @@ public interface IProbe {
      */
     public boolean writeChanges();
     
+    public boolean saveCalibration(String value, String output);
+    
 }

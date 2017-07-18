@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @brief describes a ph-probe
@@ -149,6 +151,45 @@ public class PhProbe implements IProbe {
             return false;
         }
         return true;
+    }
+    /**
+     * @brief saves the calibration of the ph probe
+     * @param value possble values: ph4, ph7, ph9
+     * @param output the measured voltage
+     * @return true if saving was successful
+     */
+    @Override
+    public boolean saveCalibration(String value, String output) {
+        value = value.toLowerCase();
+        
+        
+        try {
+            PreparedStatement statement = null;
+            Connection connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());
+            statement = connection.prepareStatement("SELECT * FROM phProbe WHERE address = '"+this.Address+"'");
+            ResultSet Result = statement.executeQuery();            
+            if(Result.next()){                
+                statement = connection.prepareStatement("UPDATE phProbe SET " + value +" = '"+output+"'"  + " WHERE address='"+this.Address+"'");
+                statement.executeUpdate();
+            }                                    
+            else{
+                statement = connection.prepareStatement("INSERT INTO phProbe "
+                        + "(address, "+value+", temperatureID)"
+                        + "VALUES ('"+this.Address+"',"
+                        + "'"+output+"',"
+                        + "'"+this.TemperatureID+"')");   
+                statement.execute();
+            }                               
+            Result.close();
+            connection.close();            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PhProbe.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        
+        
+        return true;        
     }
     
 }

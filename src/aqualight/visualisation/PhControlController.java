@@ -5,15 +5,25 @@
  */
 package aqualight.visualisation;
 
+import aqualight.databastraction.IProbeData;
+import aqualight.databastraction.PhProbe;
+import aqualight.databastraction.ProbeData;
+import aqualight.databastraction.Probes;
 import aqualight.dataprocessing.ControlValueDispatcher;
 import aqualight.dataprocessing.ControlValueListener;
 import static aqualight.visualisation.AqualightPhControllerGui.LoadMapFromDisk;
 import static aqualight.visualisation.AqualightPhControllerGui.WriteMapToDisk;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.net.URL;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +31,10 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
@@ -100,13 +114,14 @@ public class PhControlController implements Initializable {
     public Label t1;
     @FXML
     public Label t2;
-    
-    
+    @FXML
+    public ComboBox ProbeSelect;
+    @FXML
+    public LineChart linechart;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        
     }
 
     @Override
@@ -152,8 +167,40 @@ public class PhControlController implements Initializable {
         temp2.setText(getLabelNames().get(7));
         LabelContainer.add(lc8);
         PHControl = this;
+        
+        try {
+            sleep(4009);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PhControlController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        ArrayList<String> phDropdownlist = new ArrayList<>();
+        phDropdownlist.add("73 - "+PhControlController.PHControl.getLabelNamesByAddress(73));   
+        phDropdownlist.add("74 - "+PhControlController.PHControl.getLabelNamesByAddress(74));   
+        phDropdownlist.add("77 - "+PhControlController.PHControl.getLabelNamesByAddress(77));
+        phDropdownlist.add("78 - "+PhControlController.PHControl.getLabelNamesByAddress(78));
+        phDropdownlist.add("79 - "+PhControlController.PHControl.getLabelNamesByAddress(79));                                    
+        ProbeSelect.setItems(FXCollections.observableList(phDropdownlist));
+        ProbeSelect.getSelectionModel().select("77 - "+PhControlController.PHControl.getLabelNamesByAddress(77));
+        paintChart();
     }
 
+    private void paintChart(){
+        Probes probes = new Probes();
+        PhProbe phprobe = (PhProbe)probes.getProbe(ProbeSelect.getSelectionModel().getSelectedItem().toString().substring(0,3).trim());
+        
+        LinkedList<IProbeData> datalist = (LinkedList<IProbeData>) phprobe.getValues();                
+        XYChart.Series<Date, Number> series = new XYChart.Series<>();
+        
+        //Create list out of values, which are accessible
+        for(IProbeData data : datalist){            
+            series.getData().add(new XYChart.Data<>(data.getTimeStamp(), data.getProbeValue()));            
+        
+        }                         
+        
+        linechart.getData().add(series);
+    }
     
     
     /**

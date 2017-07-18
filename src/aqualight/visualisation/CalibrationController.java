@@ -5,19 +5,17 @@
  */
 package aqualight.visualisation;
 
+import aqualight.databastraction.ECProbe;
 import aqualight.databastraction.GlobalObjects;
+import aqualight.databastraction.IProbe;
+import aqualight.databastraction.PhProbe;
+import aqualight.databastraction.Probes;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -27,6 +25,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -188,30 +188,32 @@ public class CalibrationController implements Initializable {
         
         
         if(label.equals("ph4")){
-            Value = "4";
+            Value = "ph4";
             probeType = "ph";
-            Address = phDropdown.getSelectionModel().selectedItemProperty().getName();
+            Address = phDropdown.getSelectionModel().getSelectedItem().toString();
         }
         if(label.equals("ph7")){
-            Value = "7";
+            Value = "ph7";
             probeType = "ph";
-            Address = phDropdown.getSelectionModel().selectedItemProperty().getName();
+            Address = phDropdown.getSelectionModel().getSelectedItem().toString();
         }
         if(label.equals("ph9")){
-            Value = "9";
+            Value = "ph9";
             probeType = "ph";
-            Address = phDropdown.getSelectionModel().selectedItemProperty().getName();
+            Address = phDropdown.getSelectionModel().getSelectedItem().toString();
         }
         if(label.equals("ecLow")){
-            Value = "76";
+            Value = "ecLow";
             probeType = "ec";
-            Address = ecDropdown.getSelectionModel().selectedItemProperty().getName();
+            Address = ecDropdown.getSelectionModel().getSelectedItem().toString();
         }
         if(label.equals("ecHigh")){
-            Value = "1278";
+            Value = "ecHigh";
             probeType = "ec";
             Address = ecDropdown.getSelectionModel().selectedItemProperty().getName();
         }
+        //i2c adress conform
+        Address = Address.substring(0, 3).trim();
         
         if(Address != null){
         
@@ -243,82 +245,70 @@ public class CalibrationController implements Initializable {
      * @return 
      */
     public boolean executeCalibration(String pathToProgram, String Address, String Value) {
+        
+        if(!(Value.equals("ph4") | Value.equals("ph7") | Value.equals("ph9") | Value.equals("lowCal") | Value.equals("highCal")) ){
+            //early falsification if table names are not correct
+            return false;
+        }
+        
         try {
-            Process process = new ProcessBuilder(pathToProgram, Address, Value).start();
+            //Process process = new ProcessBuilder(pathToProgram, Address, Value).start();
+            Process process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup","-tc").start();
             InputStream is = process.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String line;
-            long[] args = null;
-
-            System.out.printf("Output of running %s is:", Arrays.toString(args));
+            String result;
+            long[] args = null;            
 
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                
+                if (line.contains("value")) {
+                    //here we need to find parse the ph value
+                    result = line.replaceAll("\\D{8}$", "");
+                    result = result.replaceAll("^\\D{7}", "");
+                    Probes probes = new Probes();
+                    IProbe probe = probes.getProbe(Address);
+                    
+                    if(probe.getClass().equals(PhProbe.class)){
+                       PhProbe phprobe = (PhProbe)probe;
+                       if(phprobe.saveCalibration(Value, result)){
+                            Alert alert = new Alert(AlertType.INFORMATION);
+                            alert.setTitle("Die Kalibrierung war erfolgreich.");
+                            alert.setHeaderText("Die Kalibrierung war erfolgreich.");                           
+                            alert.showAndWait();
+                       }
+                       else{
+                            Alert alert = new Alert(AlertType.ERROR);
+                            alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
+                            alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                           
+                            alert.showAndWait();
+                       }
+                    }
+                    if(probe.getClass().equals(ECProbe.class)){
+                       ECProbe ecprobe = (ECProbe)probe;
+                       if(ecprobe.saveCalibration(Value, result)){
+                            Alert alert = new Alert(AlertType.INFORMATION);
+                            alert.setTitle("Die Kalibrierung war erfolgreich.");
+                            alert.setHeaderText("Die Kalibrierung war erfolgreich.");                           
+                            alert.showAndWait(); 
+                       }
+                       else{
+                            Alert alert = new Alert(AlertType.ERROR);
+                            alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
+                            alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                                                              
+                            alert.showAndWait();
+                       }
+                    }                                         
+                    //stop parsing
+                    break;
+                }
             }
         } catch (IOException ex) {
             return false;
         }
         return false;
     }
-    /**
-     * @brief saves the calibration into sqlite database
-     * @param Address which is used
-     * @param Value ph4 / ph7 / ph9 ...
-     * @param Result result from the mc
-     * @return true if no exception was thrown
-     */
-    private boolean saveCalibration(String address, String value, String output, String probe) throws SQLException{
-        
-        PreparedStatement statement = null;
-        Connection connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
-        //check out which probe type
-        if(probe.equals("ph")){
-            statement = connection.prepareStatement("SELECT * FROM phProbe WHERE address = '"+address+"'");
-        }
-        if(probe.equals("ec")){
-            statement = connection.prepareStatement("SELECT * FROM conductivityProbe WHERE probeAddress='"+address+"'");
-        }           
-        
-        ResultSet Result = statement.executeQuery();   
-        
-        if(Result.next()){
-            if(probe.equals("ph")){
-                statement = connection.prepareStatement("UPDATE phProbe SET "
-                        + value +" = '"+output+"'"                        
-                        + " WHERE address='"+address+"'");            
-             
-            }
-            else{
-                statement = connection.prepareStatement("UPDATE conductivityProbe SET "
-                        + value +" = '"+output+"'"                        
-                        + " WHERE probeAddress='"+address+"'");            
-            }
-            statement.executeUpdate();                   
-        }
-        else{
-            if(probe.equals("ph")){
-                statement = connection.prepareStatement("INSERT INTO phProbe "
-                        + "(address, "+value+", temperatureID)"
-                        + "VALUES ('"+address+"',"
-                        + "'"+output+"',"
-                        + "'"+probe+"')");            
-                statement.execute();                       
-            }
-            else{
-                statement = connection.prepareStatement("INSERT INTO conductivityProbe "
-                        + "(probeAddress, "+value+", temperatureID)"
-                        + "VALUES ('"+address+"',"
-                        + "'"+output+"',"
-                        + "'"+probe+"')");            
-                statement.execute();
-            }
-        }
-        
-        Result.close();
-        connection.close();
-        
-        return true;
-    }
+    
     
 }

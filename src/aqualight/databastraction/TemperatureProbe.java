@@ -135,6 +135,12 @@ public class TemperatureProbe implements IProbe {
         }
         return true;
     }
+
+    @Override
+    public boolean saveCalibration(String value, String output) {
+        //The currently used temperature probe does not need calibration
+        return true;
+    }
      
     
 }
