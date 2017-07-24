@@ -42,6 +42,7 @@ public class ControlValueListener implements Observer {
                     PhControlController.PHControl.SetLabelValue(address, resultMap.get(address));                        
                 }
             });
+            
         });                
     }
 }

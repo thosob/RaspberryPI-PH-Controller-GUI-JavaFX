@@ -89,6 +89,24 @@ public class PhProbe implements IProbe {
         this.TemperatureID = TemperatureID;
     }
     /**
+     * @brief gets the probes temperature path 
+     * @return temperaturePath
+     */
+    public String getTemperaturePath(){
+        Probes probes = new Probes();
+        
+        for(IProbe probe : probes.getProbes()){
+            if(probe.getClass() == TemperatureProbe.class){
+                TemperatureProbe tempProbe = (TemperatureProbe)probe;
+                if(tempProbe.getTemperatureID() == this.TemperatureID){
+                    return tempProbe.getPath();
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * @brief gets the values (note: Data is derived)
      * @return 
      */

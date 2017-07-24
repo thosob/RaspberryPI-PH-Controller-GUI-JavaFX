@@ -30,8 +30,7 @@ public class Probes {
         try {
 
             // create a connection to the database
-            Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());            
-            System.out.println(GlobalObjects.getDatabaseFile().isFile());
+            Connection = DriverManager.getConnection(GlobalObjects.getDatabasePath());                        
             //Initialize conductivity probes
             PreparedStatement statement = Connection.prepareStatement("SELECT * FROM conductivityProbe");
             ResultSet Result = statement.executeQuery();                       
@@ -44,6 +43,7 @@ public class Probes {
                 probe.setHighCalibration(Result.getInt(3));
                 probe.setName(Result.getString(4));
                 list.add(probe);
+                System.out.println("Registered EC-Probe: "+probe.getAddress());
             }
             
             
@@ -61,6 +61,7 @@ public class Probes {
                 probe.setTemperatureID(Result.getInt(5));
                 probe.setName(Result.getString(6));  
                 list.add(probe);
+                System.out.println("Registered PH-Probe: "+probe.getAddress());
             }
             
             //Initialize ph probes
@@ -75,6 +76,7 @@ public class Probes {
                 probe.setAddress(Result.getString(2));                                                
                 probe.setName(Result.getString(3));                 
                 list.add(probe);
+                System.out.println("Registered Temperature-Probe: "+probe.getAddress());
             }              
             Probes = list.toArray(new IProbe[list.size()]);
             
@@ -108,11 +110,15 @@ public class Probes {
      */
     public IProbe getProbe(String address){
         IProbe resProbe = null;
-        for(IProbe probe : Probes){
-            if(probe.getAddress().equals(address)){
-                resProbe = probe;
+        
+        if(Probes != null){
+            for(IProbe probe : Probes){
+                if(probe.getAddress().equals(address)){
+                    resProbe = probe;
+                }
             }
         }
+        
         return resProbe;        
     }            
 }

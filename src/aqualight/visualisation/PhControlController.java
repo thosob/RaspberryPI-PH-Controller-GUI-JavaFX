@@ -7,22 +7,17 @@ package aqualight.visualisation;
 
 import aqualight.databastraction.IProbeData;
 import aqualight.databastraction.PhProbe;
-import aqualight.databastraction.ProbeData;
 import aqualight.databastraction.Probes;
 import aqualight.dataprocessing.ControlValueDispatcher;
 import aqualight.dataprocessing.ControlValueListener;
 import static aqualight.visualisation.AqualightPhControllerGui.LoadMapFromDisk;
 import static aqualight.visualisation.AqualightPhControllerGui.WriteMapToDisk;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
 import java.net.URL;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -167,14 +163,7 @@ public class PhControlController implements Initializable {
         temp2.setText(getLabelNames().get(7));
         LabelContainer.add(lc8);
         PHControl = this;
-        
-        try {
-            sleep(4009);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(PhControlController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
+               
         ArrayList<String> phDropdownlist = new ArrayList<>();
         phDropdownlist.add("73 - "+PhControlController.PHControl.getLabelNamesByAddress(73));   
         phDropdownlist.add("74 - "+PhControlController.PHControl.getLabelNamesByAddress(74));   
@@ -190,16 +179,21 @@ public class PhControlController implements Initializable {
         Probes probes = new Probes();
         PhProbe phprobe = (PhProbe)probes.getProbe(ProbeSelect.getSelectionModel().getSelectedItem().toString().substring(0,3).trim());
         
-        LinkedList<IProbeData> datalist = (LinkedList<IProbeData>) phprobe.getValues();                
-        XYChart.Series<Date, Number> series = new XYChart.Series<>();
+        LinkedList<IProbeData> datalist = (LinkedList<IProbeData>) phprobe.getValues();                       
+        
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        
         
         //Create list out of values, which are accessible
         for(IProbeData data : datalist){            
-            series.getData().add(new XYChart.Data<>(data.getTimeStamp(), data.getProbeValue()));            
+            series.getData().add(new XYChart.Data<String, Number>(String.valueOf(data.getTimeStamp().getTime()), data.getProbeValue()));            
         
-        }                         
-        
+        }                                         
+        NumberAxis numberAxis = new NumberAxis();
+        CategoryAxis dateAxis = new CategoryAxis();
+        linechart = new LineChart<String, Number>(dateAxis,numberAxis);
         linechart.getData().add(series);
+        
     }
     
     

@@ -252,8 +252,19 @@ public class CalibrationController implements Initializable {
         }
         
         try {
-            //Process process = new ProcessBuilder(pathToProgram, Address, Value).start();
-            Process process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup","-tc").start();
+            Probes probes = new Probes();
+            IProbe probe = probes.getProbe(Address);
+            Process process;
+            
+            if(probe.getClass() == PhProbe.class){
+                PhProbe phprobe = (PhProbe)probe;
+                process = new ProcessBuilder(phProgram, "/sys/bus/w1/devices/28-051690467fff/w1_slave", phprobe.getAddress(), "4").start();
+            }
+            else{
+                ECProbe ecprobe = (ECProbe)probe;
+                process = new ProcessBuilder(ecProgram, "/sys/bus/w1/devices/28-051690467fff/w1_slave", ecprobe.getAddress(), "4").start();
+            }                        
+            
             InputStream is = process.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
@@ -267,8 +278,7 @@ public class CalibrationController implements Initializable {
                     //here we need to find parse the ph value
                     result = line.replaceAll("\\D{8}$", "");
                     result = result.replaceAll("^\\D{7}", "");
-                    Probes probes = new Probes();
-                    IProbe probe = probes.getProbe(Address);
+                    
                     
                     if(probe.getClass().equals(PhProbe.class)){
                        PhProbe phprobe = (PhProbe)probe;

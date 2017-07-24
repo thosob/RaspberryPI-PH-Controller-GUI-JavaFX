@@ -5,6 +5,7 @@
  */
 package aqualight.dataprocessing;
 
+import aqualight.databastraction.ECProbe;
 import aqualight.databastraction.GlobalObjects;
 import aqualight.databastraction.IProbe;
 import aqualight.databastraction.PhProbe;
@@ -58,9 +59,9 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         PhProbe phprobe = (PhProbe)probe;
                         //Invoke scanning of ph
                         // This is the correct one:
-//                        process = new ProcessBuilder("/aqualight-phcontroller", "", probe.getAddress(), String.valueOf(phprobe.getPh4()), String.valueOf(phprobe.getPh7()), String.valueOf(phprobe.getPh9())).start();
+                        process = new ProcessBuilder(GlobalObjects.getPhProgram(), phprobe.getTemperaturePath(), probe.getAddress(), String.valueOf(phprobe.getPh4()), String.valueOf(phprobe.getPh7()), String.valueOf(phprobe.getPh9())).start();
                         //this is for mockup testing:
-                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup","-p").start();
+                        //process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup","-p").start();
                         //read it to the input stream
                         is = process.getInputStream();
                         //make it to an input stream reader
@@ -91,11 +92,12 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                 }
                 if (probe.getClass().equals(TemperatureProbe.class)) {
                     try {
-                        //Invoke scanning of ph
+                        TemperatureProbe tempProbe = (TemperatureProbe) probe;
+                        //Invoke scanning of Temperatuer
                         // This is the correct one:
-                        //process = new ProcessBuilder("/readingtemperature", probe.getAddress()).start();
+                        process = new ProcessBuilder(GlobalObjects.getTemperature(), tempProbe.getPath() ).start();
                         //this is for mockup testing:
-                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup", "-t").start();
+                        //process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup", "-t").start();
                         //read it to the input stream
                         is = process.getInputStream();
                         //make it to an input stream reader
@@ -105,10 +107,10 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         //Go through output line by line
                         while ((line = br.readLine()) != null) {
                             System.out.println(line);
-                            if (line.contains("Ph")) {
+                            if (line.contains("Temperature")) {
                                 //here we need to find parse the ph value
-                                result = line.replaceAll("\\D{5}$", "");
-                                result = result.replaceAll("^\\D{4}", "");
+                                result = line.replaceAll("\\D{14}$", "");
+                                result = result.replaceAll("^\\D{13}", "");
                                 //present read data
                                 ProbeDataMap.put(probe.getAddress(), result);
                                 //stop parsing
@@ -124,13 +126,12 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (probe.getClass().equals(TemperatureProbe.class)) {
+                
+                if (probe.getClass().equals(ECProbe.class)) {
                     try {
-                        //Invoke scanning of ph
-                        // This is the correct one:
-                        //process = new ProcessBuilder("n/readingtemperature", probe.getAddress()).start();
-                        //this is for mockup testing:
-                        process = new ProcessBuilder("/aqualight-phcontroller-gui-mockup", "-c").start();
+                        ECProbe ecprobe = (ECProbe)probe;                      
+                        //Invoke scanning of ec                        
+                        process = new ProcessBuilder(GlobalObjects.getEcProgram(), ecprobe.getTemperaturePath() ,probe.getAddress(), String.valueOf(ecprobe.getLowCalibration()), String.valueOf(ecprobe.getHighCalibration())).start();
                         //read it to the input stream
                         is = process.getInputStream();
                         //make it to an input stream reader
@@ -140,7 +141,7 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         //Go through output line by line
                         while ((line = br.readLine()) != null) {
                             System.out.println(line);
-                            if (line.contains("Ph")) {
+                            if (line.contains("EC")) {
                                 //here we need to find parse the ph value
                                 result = line.replaceAll("\\D{5}$", "");
                                 result = result.replaceAll("^\\D{4}", "");
@@ -159,6 +160,7 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         Logger.getLogger(ControlValueDispatcher.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                
 
             }
             setChanged();

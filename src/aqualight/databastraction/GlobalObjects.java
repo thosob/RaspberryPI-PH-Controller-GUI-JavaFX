@@ -7,30 +7,45 @@ package aqualight.databastraction;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 /**
  * @brief has a list of global objects, that are used over multiple fxml pages
+ *        This file is the configuration file of the controller. In production
+ *        use this will have to be some kind of configuration file.
  * @author Thomas Sobieroy
  */
 public class GlobalObjects {
-    
-    private static Probes Probes;
-    private final static File Database = new File("resources/symbiofilter.db");       
-    private static String ServerName;
-    private static String DeviceName;
+        
+    /**
+     * These are the production variables. The controller consist of several 
+     * small programs that can have different paths. Please keep in mind, that 
+     * either the user executing or the file itself needs to have execution 
+     * permission
+     */
+    private final static File Database = new File("/symbiofilter.db");       
     private final static String PhProgramCalib = "/aqualight-phcontroller-calibrator";
     private final static String EcProgramCalib = "/aqualight-conductivity-calibrator";
     private final static String PhProgram = "/aqualight-phcontroller";
     private final static String EcProgram = "/aqualight-conductivity";
-    private final static String TestProgramPH = "";
-    private final static String TestProgramEC = "";
+    private final static String Temperature = "/readingtemperature";
+    /**
+     * Define these variables for mockup testing, they will be used if other than arm architecture 
+     * is detected. Else the production variables will be used.
+     */
+    private final static String TestPhProgram = "/test_ph";
+    private final static String TestEcProgram = "/test_ec";
+    private final static String TestTemperature = "/test_temp";
+    private final static String TestPhProgramCalib = "/aqualight-phcontroller-gui-mockup -tp";
+    private final static String TestEcProgramCalib = "/aqualight-phcontroller-gui-mockup -tc";
+    private final static File TestDatabase = new File("/symbiofilter.db");       
     
+    private static Probes Probes;    
+    private static String ServerName;
+    private static String DeviceName;
     /**
      * @brief initializes all global objects - useful for unit-tests
      */
@@ -89,7 +104,12 @@ public class GlobalObjects {
      * @return 
      */
     public static File getDatabaseFile(){        
-        return Database;
+        if(System.getProperty("os.arch").contains("arm")){
+            return Database;
+        }
+        else{
+            return TestDatabase;
+        }
     }
 
     /**
@@ -170,31 +190,59 @@ public class GlobalObjects {
      * @return the PhProgramCalib
      */
     public static String getPhProgramCalib() {
-        return PhProgramCalib;
+        if(System.getProperty("os.arch").contains("arm")){
+            return PhProgramCalib;
+        }
+        else{
+            return TestPhProgramCalib;
+        }       
     }
 
     /**
      * @return the EcProgramCalib
      */
     public static String getEcProgramCalib() {
-        return EcProgramCalib;
+        if(System.getProperty("os.arch").contains("arm")){
+            return EcProgramCalib;
+        }
+        else{
+            return TestEcProgramCalib;
+        }
     }
 
     /**
      * @return the PhProgram
      */
     public static String getPhProgram() {
-        return PhProgram;
+        if(System.getProperty("os.arch").contains("arm")){
+            return PhProgram;
+        }
+        else{
+            return TestPhProgram;
+        }        
     }
 
     /**
      * @return the EcProgram
      */
     public static String getEcProgram() {
-        return EcProgram;
+        if(System.getProperty("os.arch").contains("arm")){
+            return EcProgram;
+        }
+        else{
+            return TestEcProgram;
+        }          
     }
-    
-   
-    
-    
+
+    /**
+     * @return the Temperature
+     */
+    public static String getTemperature() {
+        if(System.getProperty("os.arch").contains("arm")){
+            return Temperature;
+        }
+        else{
+            return TestTemperature;
+        }        
+    }                  
 }

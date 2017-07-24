@@ -57,6 +57,25 @@ public class ECProbe implements IProbe{
             Data.add(data);
         }
     }
+    
+     /**
+     * @brief gets the probes temperature path 
+     * @return temperaturePath
+     */
+    public String getTemperaturePath(){
+        Probes probes = new Probes();
+        
+        for(IProbe probe : probes.getProbes()){
+            if(probe.getClass() == TemperatureProbe.class){
+                TemperatureProbe tempProbe = (TemperatureProbe)probe;
+                if(tempProbe.getTemperatureID() == this.TemperatureID){
+                    return tempProbe.getPath();
+                }
+            }
+        }
+        return null;
+    }
+    
 
     /**
      * @return the LowCalibration
