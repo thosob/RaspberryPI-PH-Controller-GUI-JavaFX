@@ -58,7 +58,7 @@ public class AqualightPhControllerGui extends Application {
             return true;
         } catch (IOException e) {
             //if something goes terrible wrong
-            System.err.println(e);
+            System.out.println(e);
             return false;
         }
     }

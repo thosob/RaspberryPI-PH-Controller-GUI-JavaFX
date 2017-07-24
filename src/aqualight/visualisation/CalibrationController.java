@@ -67,7 +67,7 @@ public class CalibrationController implements Initializable {
         tilePane.getChildren().add(new Label());
         tilePane.getChildren().add(createTile("Übersicht", Color.CADETBLUE));
         tilePane.getChildren().add(createTile("Eichen", Color.DIMGREY));
-        tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
+        tilePane.getChildren().add(createTile("Kamera", Color.TURQUOISE));
         tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
         
         ArrayList<String> phDropdownlist = new ArrayList<>();
@@ -148,7 +148,7 @@ public class CalibrationController implements Initializable {
                 System.out.println(menuTitle);
                 return true;
             }
-            if (menuTitle.equals("Statistik")) {
+            if (menuTitle.equals("Kamera")) {
                Parent root = FXMLLoader.load(getClass().getResource("Statistic.fxml"));
                  
                 AqualightPhControllerGui.setScene(new Scene(root));
@@ -169,7 +169,7 @@ public class CalibrationController implements Initializable {
                 return true;
             }
         } catch (IOException exc) {
-            System.err.println(exc);
+            System.out.println(exc);
         }
         System.out.println("Could not determine menu title");
         return false;
@@ -203,14 +203,14 @@ public class CalibrationController implements Initializable {
             Address = phDropdown.getSelectionModel().getSelectedItem().toString();
         }
         if(label.equals("ecLow")){
-            Value = "ecLow";
+            Value = "lowCal";
             probeType = "ec";
             Address = ecDropdown.getSelectionModel().getSelectedItem().toString();
         }
         if(label.equals("ecHigh")){
-            Value = "ecHigh";
+            Value = "highCal";
             probeType = "ec";
-            Address = ecDropdown.getSelectionModel().selectedItemProperty().getName();
+            Address = ecDropdown.getSelectionModel().getSelectedItem().toString();
         }
         //i2c adress conform
         Address = Address.substring(0, 3).trim();
@@ -247,6 +247,12 @@ public class CalibrationController implements Initializable {
     public boolean executeCalibration(String pathToProgram, String Address, String Value) {
         
         if(!(Value.equals("ph4") | Value.equals("ph7") | Value.equals("ph9") | Value.equals("lowCal") | Value.equals("highCal")) ){
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
+            alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");
+            alert.setContentText(" Die Tabellenbezeichnung war falsch in executeCalibration(...).\n"
+                    + "Sie lautete: "+Value);                                                              
+            alert.showAndWait();
             //early falsification if table names are not correct
             return false;
         }
@@ -258,11 +264,11 @@ public class CalibrationController implements Initializable {
             
             if(probe.getClass() == PhProbe.class){
                 PhProbe phprobe = (PhProbe)probe;
-                process = new ProcessBuilder(phProgram, "/sys/bus/w1/devices/28-051690467fff/w1_slave", phprobe.getAddress(), "4").start();
+                process = new ProcessBuilder(phProgram, phprobe.getTemperaturePath(), phprobe.getAddress(), "4").start();
             }
             else{
                 ECProbe ecprobe = (ECProbe)probe;
-                process = new ProcessBuilder(ecProgram, "/sys/bus/w1/devices/28-051690467fff/w1_slave", ecprobe.getAddress(), "4").start();
+                process = new ProcessBuilder(ecProgram, ecprobe.getTemperaturePath(), ecprobe.getAddress(), "4").start();
             }                        
             
             InputStream is = process.getInputStream();
@@ -271,14 +277,14 @@ public class CalibrationController implements Initializable {
             String line;
             String result;
             long[] args = null;            
-
+            System.out.println("Initializing calibration: ");
             while ((line = br.readLine()) != null) {
                 
                 if (line.contains("value")) {
                     //here we need to find parse the ph value
                     result = line.replaceAll("\\D{8}$", "");
                     result = result.replaceAll("^\\D{7}", "");
-                    
+                    System.out.println("Result: "+result);
                     
                     if(probe.getClass().equals(PhProbe.class)){
                        PhProbe phprobe = (PhProbe)probe;
@@ -287,12 +293,14 @@ public class CalibrationController implements Initializable {
                             alert.setTitle("Die Kalibrierung war erfolgreich.");
                             alert.setHeaderText("Die Kalibrierung war erfolgreich.");                           
                             alert.showAndWait();
+                            System.out.println("Kalibrierung war erfolgreich.");
                        }
                        else{
                             Alert alert = new Alert(AlertType.ERROR);
                             alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
                             alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                           
                             alert.showAndWait();
+                            System.out.println("Kalibrierung war nicht erfolgreich.");
                        }
                     }
                     if(probe.getClass().equals(ECProbe.class)){
@@ -313,9 +321,20 @@ public class CalibrationController implements Initializable {
                     //stop parsing
                     break;
                 }
-            }
+            }           
         } catch (IOException ex) {
+             Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
+            alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                           
+            alert.setContentText("Value konnte nicht gefunden werden. \n Die "
+                    + "Ursache hierfür liegt \n "
+                    + "in der Konfiguration der GlobalObjects.java. \n"
+                    + "Dort konnte das Programm zum Kalibrieren nicht richtig \n"
+                    + "ausgeführt werden.");
+            alert.showAndWait();
+            System.out.println("Kalibrierung war nicht erfolgreich.");            
             return false;
+            
         }
         return false;
     }

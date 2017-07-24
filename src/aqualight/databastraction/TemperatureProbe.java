@@ -130,7 +130,7 @@ public class TemperatureProbe implements IProbe {
             Connection.close();
         }
         catch(SQLException sqlexc){
-            System.err.println(sqlexc);
+            System.out.println(sqlexc);
             return false;
         }
         return true;

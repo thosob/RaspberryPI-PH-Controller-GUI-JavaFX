@@ -22,14 +22,14 @@
          <children>
             <ComboBox id="phProbe" fx:id="phDropdown" layoutX="3.0" layoutY="18.0" />
             <Label layoutX="-37.0" layoutY="23.0" text="PH:" />
-            <Label layoutX="341.0" layoutY="23.0" text="Leitwert:" />
+            <Label layoutX="341.0" layoutY="23.0" text="EC:" />
             <ComboBox id="ecProbe" fx:id="ecDropdown" layoutX="402.0" layoutY="18.0" />
-            <Button fx:id="ph7" layoutX="67.0" layoutY="69.0" minWidth="100.0" mnemonicParsing="false" onAction="#clickCalibration" text="PH7 Kalibrieren" />
-            <Button fx:id="ph9" layoutX="186.0" layoutY="69.0" minWidth="100.0" mnemonicParsing="false" onAction="#clickCalibration" text="PH9 Kalibrieren" />
-            <Button fx:id="ecLow" layoutX="392.0" layoutY="69.0" minWidth="120.0" mnemonicParsing="false" onAction="#clickCalibration" text="76 µS Kalbrieren" />
-            <Button fx:id="ecHigh" layoutX="528.0" layoutY="69.0" minWidth="120.0" mnemonicParsing="false" onAction="#clickCalibration" text="1278 µS Kalibrieren" />
+            <Button fx:id="ph7" layoutX="-26.0" layoutY="90.0" minWidth="100.0" mnemonicParsing="false" onAction="#clickCalibration" text="PH7 Kalibrieren" />
+            <Button fx:id="ph9" layoutX="-26.0" layoutY="122.0" minWidth="100.0" mnemonicParsing="false" onAction="#clickCalibration" text="PH9 Kalibrieren" />
+            <Button fx:id="ecLow" layoutX="367.0" layoutY="57.0" minWidth="120.0" mnemonicParsing="false" onAction="#clickCalibration" text="76 µS Kalbrieren" />
+            <Button fx:id="ecHigh" layoutX="367.0" layoutY="90.0" minWidth="120.0" mnemonicParsing="false" onAction="#clickCalibration" text="1278 µS Kalibrieren" />
             <Separator layoutX="321.0" layoutY="9.0" orientation="VERTICAL" prefHeight="200.0" />
-            <Button fx:id="ph4" layoutX="-50.0" layoutY="69.0" minWidth="100.0" mnemonicParsing="false" onAction="#clickCalibration" text="PH4 Kalibrieren" />
+            <Button fx:id="ph4" layoutX="-26.0" layoutY="57.0" minWidth="100.0" mnemonicParsing="false" onAction="#clickCalibration" text="PH4 Kalibrieren" />
          </children>
         </Pane>
         <TilePane fx:id="tilePane" layoutY="367.0" prefHeight="115.0" prefWidth="800.0">

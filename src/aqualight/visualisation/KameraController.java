@@ -8,6 +8,7 @@ package aqualight.visualisation;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +16,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.StackPane;
@@ -28,13 +31,16 @@ import javafx.scene.text.Text;
  *
  * @author tsobieroy
  */
-public class StatisticController implements Initializable {
+public class KameraController implements Initializable {
 
     /**
      * Initializes the controller class.
      */
     @FXML
     private TilePane tilePane;
+    
+    @FXML
+    private ImageView camera;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -47,9 +53,18 @@ public class StatisticController implements Initializable {
         tilePane.getChildren().add(new Label());
         tilePane.getChildren().add(createTile("Übersicht", Color.CADETBLUE));
         tilePane.getChildren().add(createTile("Eichen", Color.DIMGREY));
-        tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
+        tilePane.getChildren().add(createTile("Kamera", Color.TURQUOISE));
         tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
-
+        
+        makePicture(null);
+    }
+    
+    @FXML
+    public void makePicture(ActionEvent event){
+        
+        Image image = new Image("@camera.jpg");
+        camera.setImage(image); 
+        
     }
 
     /**
@@ -97,8 +112,7 @@ public class StatisticController implements Initializable {
                 return true;
             }
             if (menuTitle.equals("Eichen")) {
-                Parent root = FXMLLoader.load(getClass().getResource("Calibration.fxml"));
-                 
+                Parent root = FXMLLoader.load(getClass().getResource("Calibration.fxml"));                 
                 AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
                 scene.getStylesheets().add("AqualightPh.css");
@@ -106,8 +120,8 @@ public class StatisticController implements Initializable {
                 System.out.println(menuTitle);
                 return true;
             }
-            if (menuTitle.equals("Statistik")) {
-               Parent root = FXMLLoader.load(getClass().getResource("Statistic.fxml"));
+            if (menuTitle.equals("Kamera")) {
+               Parent root = FXMLLoader.load(getClass().getResource("Kamera.fxml"));
                  
                 AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
@@ -127,7 +141,7 @@ public class StatisticController implements Initializable {
                 return true;
             }
         } catch (IOException exc) {
-            System.err.println(exc);
+            System.out.println(exc);
         }
         System.out.println("Could not determine menu title");
         return false;

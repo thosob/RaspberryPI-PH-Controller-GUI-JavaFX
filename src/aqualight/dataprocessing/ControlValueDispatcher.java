@@ -70,7 +70,7 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         br = new BufferedReader(isr);
                         //Go through output line by line
                         while ((line = br.readLine()) != null) {
-                            System.out.println(line);
+                            //System.out.println(line);
                             if (line.contains("Ph")) {
                                 //here we need to find parse the ph value
                                 result = line.replaceAll("\\D{5}$", "");
@@ -106,7 +106,7 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         br = new BufferedReader(isr);
                         //Go through output line by line
                         while ((line = br.readLine()) != null) {
-                            System.out.println(line);
+                            //System.out.println(line);
                             if (line.contains("Temperature")) {
                                 //here we need to find parse the ph value
                                 result = line.replaceAll("\\D{14}$", "");
@@ -140,7 +140,7 @@ public class ControlValueDispatcher extends Observable implements Runnable {
                         br = new BufferedReader(isr);
                         //Go through output line by line
                         while ((line = br.readLine()) != null) {
-                            System.out.println(line);
+                            //System.out.println(line);
                             if (line.contains("EC")) {
                                 //here we need to find parse the ph value
                                 result = line.replaceAll("\\D{5}$", "");

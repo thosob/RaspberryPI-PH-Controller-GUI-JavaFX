@@ -131,7 +131,7 @@ public class PhControlController implements Initializable {
         tilePane.getChildren().add(new Label());
         tilePane.getChildren().add(createTile("Übersicht", Color.CADETBLUE));
         tilePane.getChildren().add(createTile("Eichen", Color.DIMGREY));
-        tilePane.getChildren().add(createTile("Statistik", Color.TURQUOISE));
+        tilePane.getChildren().add(createTile("Kamera", Color.TURQUOISE));
         tilePane.getChildren().add(createTile("Einstellung", Color.DARKBLUE));
         
         initializeGlobalGUIObjects(AqualightPhControllerGui.getScene());
@@ -261,8 +261,8 @@ public class PhControlController implements Initializable {
                 System.out.println(menuTitle);
                 return true;
             }
-            if (menuTitle.equals("Statistik")) {
-               Parent root = FXMLLoader.load(getClass().getResource("Statistic.fxml"));
+            if (menuTitle.equals("Kamera")) {
+               Parent root = FXMLLoader.load(getClass().getResource("Kamera.fxml"));
                  
                 AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
@@ -282,7 +282,7 @@ public class PhControlController implements Initializable {
                 return true;
             }
         } catch (IOException exc) {
-            System.err.println(exc);
+            System.out.println(exc);
         }
         System.out.println("Could not determine menu title - "+menuTitle);
         return false;

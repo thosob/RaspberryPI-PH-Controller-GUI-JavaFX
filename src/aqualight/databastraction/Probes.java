@@ -42,8 +42,7 @@ public class Probes {
                 probe.setLowCalibration(Result.getInt(2));
                 probe.setHighCalibration(Result.getInt(3));
                 probe.setName(Result.getString(4));
-                list.add(probe);
-                System.out.println("Registered EC-Probe: "+probe.getAddress());
+                list.add(probe);                
             }
             
             
@@ -60,8 +59,7 @@ public class Probes {
                 probe.setPh9(Result.getInt(4));
                 probe.setTemperatureID(Result.getInt(5));
                 probe.setName(Result.getString(6));  
-                list.add(probe);
-                System.out.println("Registered PH-Probe: "+probe.getAddress());
+                list.add(probe);                
             }
             
             //Initialize ph probes
@@ -75,14 +73,13 @@ public class Probes {
                 probe.setPath(Result.getString(2));
                 probe.setAddress(Result.getString(2));                                                
                 probe.setName(Result.getString(3));                 
-                list.add(probe);
-                System.out.println("Registered Temperature-Probe: "+probe.getAddress());
+                list.add(probe);                
             }              
             Probes = list.toArray(new IProbe[list.size()]);
             
         } catch (SQLException e) {
             System.out.println("Probes.java: "+e.getMessage());
-            System.err.println(e);
+            System.out.println(e);
         } finally {
             try {
                 if (Connection != null) {
