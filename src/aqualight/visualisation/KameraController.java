@@ -5,9 +5,12 @@
  */
 package aqualight.visualisation;
 
+import aqualight.databastraction.GlobalObjects;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -62,7 +65,13 @@ public class KameraController implements Initializable {
     @FXML
     public void makePicture(ActionEvent event){
         
-        Image image = new Image("@camera.jpg");
+        
+        try {
+            Process process = new ProcessBuilder(GlobalObjects.getCaptureImage(), "-o", GlobalObjects.getImagePath()).start();
+        } catch (IOException ex) {
+            Logger.getLogger(KameraController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Image image = new Image(GlobalObjects.getImagePath());
         camera.setImage(image); 
         
     }
@@ -106,15 +115,16 @@ public class KameraController implements Initializable {
         try {
             if (menuTitle.equals("Übersicht")) {
                 Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
-                AqualightPhControllerGui.setScene(new Scene(root));
+                scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
                 return true;
             }
             if (menuTitle.equals("Eichen")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Calibration.fxml"));                 
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
@@ -123,8 +133,8 @@ public class KameraController implements Initializable {
             if (menuTitle.equals("Kamera")) {
                Parent root = FXMLLoader.load(getClass().getResource("Kamera.fxml"));
                  
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
@@ -133,8 +143,8 @@ public class KameraController implements Initializable {
             if (menuTitle.equals("Einstellung")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Settings.fxml"));
                  
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);

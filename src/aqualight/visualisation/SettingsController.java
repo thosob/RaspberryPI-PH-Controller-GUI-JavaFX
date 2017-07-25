@@ -308,39 +308,38 @@ public class SettingsController implements Initializable {
         try {
             if (menuTitle.equals("Übersicht")) {
                 Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
-                AqualightPhControllerGui.setScene(new Scene(root));
+                scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
-                System.out.println(menuTitle);
+                
                 return true;
             }
             if (menuTitle.equals("Eichen")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Calibration.fxml"));
-
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
-                System.out.println(menuTitle);
+                
                 return true;
             }
             if (menuTitle.equals("Kamera")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Kamera.fxml"));
 
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
-                System.out.println(menuTitle);
+                
                 return true;
             }
             if (menuTitle.equals("Einstellung")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Settings.fxml"));
 
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 scene.getStylesheets().add("AqualightPh.css");
-                AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
-                System.out.println(menuTitle);
+                AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());                
                 return true;
             }
         } catch (Exception exc) {

@@ -32,6 +32,8 @@ public class GlobalObjects {
     private final static String PhProgram = "/aqualight-phcontroller";
     private final static String EcProgram = "/aqualight-conductivity";
     private final static String Temperature = "/readingtemperature";
+    private final static String ImagePath = "/camera.jpg";
+    private final static String CaptureImage = "raspistill";
     /**
      * Define these variables for mockup testing, they will be used if other than arm architecture 
      * is detected. Else the production variables will be used.
@@ -41,7 +43,9 @@ public class GlobalObjects {
     private final static String TestTemperature = "/test_temp";
     private final static String TestPhProgramCalib = "/aqualight-phcontroller-gui-mockup -tp";
     private final static String TestEcProgramCalib = "/aqualight-phcontroller-gui-mockup -tc";
-    private final static File TestDatabase = new File("/symbiofilter.db");       
+    private final static String TestImagePath = "/camera.jpg";
+    private final static File TestDatabase = new File("/symbiofilter.db");      
+    
     
     private static Probes Probes;    
     private static String ServerName;
@@ -245,4 +249,23 @@ public class GlobalObjects {
             return TestTemperature;
         }        
     }                  
+
+    /**
+     * @return the ImagePath
+     */
+    public static String getImagePath() {
+        if(System.getProperty("os.arch").contains("arm")){
+            return ImagePath;
+        }
+        else{
+            return TestImagePath;
+        }               
+    }
+
+    /**
+     * @return the CaptureImage
+     */
+    public static String getCaptureImage() {
+        return CaptureImage;
+    }
 }

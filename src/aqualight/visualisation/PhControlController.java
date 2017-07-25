@@ -110,10 +110,8 @@ public class PhControlController implements Initializable {
     public Label t1;
     @FXML
     public Label t2;
-    @FXML
-    public ComboBox ProbeSelect;
-    @FXML
-    public LineChart linechart;
+    
+   
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -169,31 +167,7 @@ public class PhControlController implements Initializable {
         phDropdownlist.add("74 - "+PhControlController.PHControl.getLabelNamesByAddress(74));   
         phDropdownlist.add("77 - "+PhControlController.PHControl.getLabelNamesByAddress(77));
         phDropdownlist.add("78 - "+PhControlController.PHControl.getLabelNamesByAddress(78));
-        phDropdownlist.add("79 - "+PhControlController.PHControl.getLabelNamesByAddress(79));                                    
-        ProbeSelect.setItems(FXCollections.observableList(phDropdownlist));
-        ProbeSelect.getSelectionModel().select("77 - "+PhControlController.PHControl.getLabelNamesByAddress(77));
-        paintChart();
-    }
-
-    private void paintChart(){
-        Probes probes = new Probes();
-        PhProbe phprobe = (PhProbe)probes.getProbe(ProbeSelect.getSelectionModel().getSelectedItem().toString().substring(0,3).trim());
-        
-        LinkedList<IProbeData> datalist = (LinkedList<IProbeData>) phprobe.getValues();                       
-        
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        
-        
-        //Create list out of values, which are accessible
-        for(IProbeData data : datalist){            
-            series.getData().add(new XYChart.Data<String, Number>(String.valueOf(data.getTimeStamp().getTime()), data.getProbeValue()));            
-        
-        }                                         
-        NumberAxis numberAxis = new NumberAxis();
-        CategoryAxis dateAxis = new CategoryAxis();
-        linechart = new LineChart<String, Number>(dateAxis,numberAxis);
-        linechart.getData().add(series);
-        
+        phDropdownlist.add("79 - "+PhControlController.PHControl.getLabelNamesByAddress(79));                                           
     }
     
     
@@ -246,7 +220,8 @@ public class PhControlController implements Initializable {
         try {
             if (menuTitle.equals("Übersicht")) {
                 Parent root = FXMLLoader.load(getClass().getResource("PhControl.fxml"));
-                AqualightPhControllerGui.setScene(new Scene(root));
+                scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
                 return true;
@@ -254,8 +229,8 @@ public class PhControlController implements Initializable {
             if (menuTitle.equals("Eichen")) {
                 Parent root = FXMLLoader.load(getClass().getResource("Calibration.fxml"));
                  
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
@@ -264,18 +239,17 @@ public class PhControlController implements Initializable {
             if (menuTitle.equals("Kamera")) {
                Parent root = FXMLLoader.load(getClass().getResource("Kamera.fxml"));
                  
-                AqualightPhControllerGui.setScene(new Scene(root));
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);  
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
                 return true;
             }
             if (menuTitle.equals("Einstellung")) {
-                Parent root = FXMLLoader.load(getClass().getResource("Settings.fxml"));
-                 
-                AqualightPhControllerGui.setScene(new Scene(root));
+                Parent root = FXMLLoader.load(getClass().getResource("Settings.fxml"));                                
                 scene = AqualightPhControllerGui.getScene();
+                scene.setRoot(root);                                
                 scene.getStylesheets().add("AqualightPh.css");
                 AqualightPhControllerGui.getGuiStage().setScene(AqualightPhControllerGui.getScene());
                 System.out.println(menuTitle);
