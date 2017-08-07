@@ -15,7 +15,6 @@
     <TilePane fx:id="tilePane" layoutY="367.0" prefHeight="115.0" prefWidth="800.0">
          
       </TilePane>
-   <ImageView id="camera" fx:id="camera" fitHeight="197.0" fitWidth="353.0" layoutX="250.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true" />
-   <Button fx:id="capture" layoutX="380.0" layoutY="304.0" mnemonicParsing="false" onAction="#makePicture" text="Aktualisieren" />
-   <ImageView id="camera" fx:id="camera1" fitHeight="197.0" fitWidth="353.0" layoutX="259.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView id="camera" fx:id="camera" fitHeight="197.0" fitWidth="353.0" layoutX="250.0" layoutY="66.0" pickOnBounds="true" preserveRatio="false" />
+   <Button fx:id="capture" layoutX="380.0" layoutY="304.0" mnemonicParsing="false" onAction="#makePicture" text="Preview" />
 </Pane>

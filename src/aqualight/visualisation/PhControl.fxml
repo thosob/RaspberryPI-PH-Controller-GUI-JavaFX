@@ -26,16 +26,16 @@
             <!-- <Label fx:id="p7Name" layoutX="261.0" layoutY="62.0" styleClass="probeLabelText" text="Probe7:" />
             <Label fx:id="p8Name" layoutX="261.0" layoutY="79.0" styleClass="probeLabelText" text="Probe8:" /> -->
             <Label fx:id="temp2" layoutX="261.0" layoutY="100.0" prefHeight="15.0" prefWidth="133.0" styleClass="tempLabelText" text="Temperature-2:" />
-            <Label fx:id="p1" layoutX="176.0" layoutY="28.0" styleClass="probeValueText" text="-" />
-            <Label fx:id="p2" layoutX="176.0" layoutY="45.0" styleClass="probeValueText" text="-" />
-            <Label fx:id="p3" layoutX="176.0" layoutY="62.0" styleClass="probeValueText" text="-" />
+            <Label fx:id="p1" layoutX="176.0" layoutY="28.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p2" layoutX="176.0" layoutY="45.0" styleClass="probeValueText" text="7.0" />
+            <Label fx:id="p3" layoutX="176.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />
             <Label fx:id="p4" layoutX="176.0" layoutY="79.0" styleClass="probeValueText" text="-" />
-            <Label fx:id="t2" layoutX="397.0" layoutY="100.0" styleClass="tempValueText" text="-" />
+            <Label fx:id="t2" layoutX="397.0" layoutY="100.0" styleClass="tempValueText" text="7.0" />
             <!--<Label fx:id="p8" layoutX="397.0" layoutY="79.0" styleClass="probeValueText" text="7.0" />
             <Label fx:id="p7" layoutX="397.0" layoutY="62.0" styleClass="probeValueText" text="7.0" />-->
-            <Label fx:id="p6" layoutX="397.0" layoutY="47.0" styleClass="probeValueText" text="-" />
+            <Label fx:id="p6" layoutX="397.0" layoutY="47.0" styleClass="probeValueText" text="7.0" />
             <Label fx:id="p5" layoutX="397.0" layoutY="28.0" styleClass="probeValueText" text="-" />
-            <Label fx:id="t1" layoutX="176.0" layoutY="100.0" styleClass="tempValueText" text="-" />
+            <Label fx:id="t1" layoutX="176.0" layoutY="100.0" styleClass="tempValueText" text="7.0" />
             <Separator layoutX="-5.0" layoutY="99.0" prefWidth="200.0" />
             <Separator layoutX="249.0" layoutY="99.0" prefWidth="200.0" />                             
          </children>         

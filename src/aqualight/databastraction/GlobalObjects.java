@@ -41,8 +41,8 @@ public class GlobalObjects {
     private final static String TestPhProgram = "/test_ph";
     private final static String TestEcProgram = "/test_ec";
     private final static String TestTemperature = "/test_temp";
-    private final static String TestPhProgramCalib = "/aqualight-phcontroller-gui-mockup -tp";
-    private final static String TestEcProgramCalib = "/aqualight-phcontroller-gui-mockup -tc";
+    private final static String TestPhProgramCalib = "/test_tp";
+    private final static String TestEcProgramCalib = "/test_tc";
     private final static String TestImagePath = "/camera.jpg";
     private final static File TestDatabase = new File("/symbiofilter.db");      
     

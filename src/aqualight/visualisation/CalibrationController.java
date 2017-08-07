@@ -53,9 +53,16 @@ public class CalibrationController implements Initializable {
     private TilePane tilePane;
     @FXML
     private ComboBox phDropdown;
+    /**
+     * @brief Combobox ec
+     */
     @FXML
     private ComboBox ecDropdown;
-    
+    /**
+     * @brief initializes the fxml file
+     * @param url
+     * @param rb 
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tilePane.setPadding(new Insets(5, 0, 5, 0));
@@ -279,12 +286,13 @@ public class CalibrationController implements Initializable {
             String result;
             long[] args = null;            
             System.out.println("Initializing calibration: ");
+            int count = 0;
             while ((line = br.readLine()) != null) {
                 
                 if (line.contains("value")) {
                     //here we need to find parse the ph value
-                    result = line.replaceAll("\\D{8}$", "");
-                    result = result.replaceAll("^\\D{7}", "");
+                    result = line.replaceAll("\\</value>.*$", "");
+                    result = result.replaceAll("^.*<value>", "");
                     System.out.println("Result: "+result);
                     
                     if(probe.getClass().equals(PhProbe.class)){
@@ -293,15 +301,17 @@ public class CalibrationController implements Initializable {
                             Alert alert = new Alert(AlertType.INFORMATION);
                             alert.setTitle("Die Kalibrierung war erfolgreich.");
                             alert.setHeaderText("Die Kalibrierung war erfolgreich.");                           
-                            alert.showAndWait();
                             System.out.println("Kalibrierung war erfolgreich.");
+                            alert.show();
+                            
                        }
                        else{
                             Alert alert = new Alert(AlertType.ERROR);
                             alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
                             alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                           
-                            alert.showAndWait();
                             System.out.println("Kalibrierung war nicht erfolgreich.");
+                            alert.show();
+                            
                        }
                     }
                     if(probe.getClass().equals(ECProbe.class)){
@@ -310,18 +320,26 @@ public class CalibrationController implements Initializable {
                             Alert alert = new Alert(AlertType.INFORMATION);
                             alert.setTitle("Die Kalibrierung war erfolgreich.");
                             alert.setHeaderText("Die Kalibrierung war erfolgreich.");                           
-                            alert.showAndWait(); 
+                            alert.show(); 
                        }
                        else{
                             Alert alert = new Alert(AlertType.ERROR);
                             alert.setTitle("Die Kalibrierung war nicht erfolgreich.");
-                            alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                                                              
-                            alert.showAndWait();
+                            alert.setHeaderText("Die Kalibrierung war nicht erfolgreich.");                             
+                            alert.show();
                        }
                     }                                         
                     //stop parsing
                     break;
+                }else{
+                    System.out.println("Line skipped: "+line);
+                    if(count > 10){
+                        break;
+                    }
+                    count++;
+                    
                 }
+                
             }           
         } catch (IOException ex) {
              Alert alert = new Alert(AlertType.ERROR);
@@ -332,8 +350,10 @@ public class CalibrationController implements Initializable {
                     + "in der Konfiguration der GlobalObjects.java. \n"
                     + "Dort konnte das Programm zum Kalibrieren nicht richtig \n"
                     + "ausgeführt werden.");
-            alert.showAndWait();
             System.out.println("Kalibrierung war nicht erfolgreich.");            
+            alert.show();
+            
+            
             return false;
             
         }
